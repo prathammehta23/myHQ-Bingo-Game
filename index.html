@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>myHQ Bingo — Play</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --brand: #1E22AA;
+  --coral: #FF7351;
+  --yellow: #FFB848;
+  --peach: #F4BEAA;
+  --mint: #96E6DC;
+  
+  --surface: #FFFFFF;
+  --border: #E2E8F0;
+  --text: #1E293B;
+  --muted: #64748B;
+  --mono: 'Roboto Mono', monospace;
+  --sans: 'Inter', sans-serif;
+}
+
+body{
+  font-family:var(--sans);
+  background: linear-gradient(135deg, rgba(244,190,170,0.2) 0%, rgba(150,230,220,0.2) 100%);
+  background-attachment:fixed;
+  color:var(--text);
+  min-height:100vh;
+  padding:20px 16px 40px;
+  max-width:480px;
+  margin:0 auto;
+}
+
+.wrap{position:relative;z-index:1}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-img{height:42px;width:auto;border-radius:6px;box-shadow:0 4px 10px rgba(0,0,0,0.06);} 
+.logo-title{font-size:18px;font-weight:800;letter-spacing:-0.5px;color:var(--brand)}
+.logo-sub{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-family:var(--mono);font-weight:700;}
+
+.join-hero{text-align:center;padding:28px 0 24px}
+.join-emoji{font-size:52px;display:block;margin-bottom:14px}
+.join-title{font-size:28px;font-weight:800;margin-bottom:8px;letter-spacing:-1px;color:var(--brand)}
+.join-sub{font-size:14px;color:var(--muted);line-height:1.65}
+.join-form{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:24px;margin-top:24px;box-shadow:0 4px 20px rgba(0,0,0,0.05)}
+.field{margin-bottom:16px}
+.field-label{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-family:var(--mono);margin-bottom:8px;display:block;font-weight:700}
+.field-input{width:100%;background:#F8FAFC;border:1px solid var(--border);border-radius:12px;padding:13px 15px;color:var(--text);font-family:var(--sans);font-size:15px;transition:all .2s}
+.field-input::placeholder{color:#94A3B8}
+.field-input:focus{outline:none;border-color:var(--coral);background:#fff;box-shadow:0 0 0 3px rgba(255,115,81,0.15)}
+.code-input{font-family:var(--mono);font-size:22px;font-weight:700;letter-spacing:6px;text-align:center;text-transform:uppercase}
+.join-btn{width:100%;background:linear-gradient(135deg, var(--coral), var(--yellow));color:#fff;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:800;font-family:var(--sans);cursor:pointer;transition:all .2s;margin-top:4px;box-shadow:0 4px 12px rgba(255,115,81,0.25); text-shadow:0 1px 2px rgba(0,0,0,0.1)}
+.join-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(255,115,81,0.35)}
+.join-btn:active{transform:scale(.98)}
+.join-btn:disabled{background:#E2E8F0;color:#94A3B8;box-shadow:none;cursor:not-allowed;text-shadow:none;transform:none}
+.error-msg{color:#ef4444;font-size:13px;font-family:var(--mono);text-align:center;margin-top:12px;display:none;padding:10px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca}
+
+#game-screen{display:none}
+.player-bar{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,0.03)}
+.player-name-show{font-weight:700;font-size:15px;color:var(--brand)}
+.player-email-show{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:2px}
+.room-badge{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--coral);background:#FFF4F1;border:1px solid rgba(255,115,81,0.2);border-radius:100px;padding:4px 12px; display:inline-block; margin-bottom: 4px;}
+
+.call-ticker{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;box-shadow:0 4px 12px rgba(0,0,0,0.03)}
+.ticker-label{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-family:var(--mono);margin-bottom:5px;font-weight:700}
+.ticker-val{font-size:26px;font-weight:800;color:var(--coral);font-family:var(--mono)}
+.ticker-right{text-align:right;font-size:12px;color:var(--muted);font-family:var(--mono);line-height:1.7;font-weight:500;}
+
+.card-wrap{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:0 4px 20px rgba(0,0,0,0.04)}
+.card-header-row{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:8px}
+.col-lbl{text-align:center;font-size:22px;font-weight:800;padding:10px 0;color:var(--brand)}
+.card-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+
+.card-cell{position:relative;aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:10px;font-size:18px;font-weight:700;font-family:var(--mono);cursor:pointer;transition:transform .1s, box-shadow .1s;background:#FFFFFF;color:var(--text);border:2px solid #E2E8F0;user-select:none;box-shadow:0 3px 0 #E2E8F0}
+.card-cell:active{transform:translateY(3px);box-shadow:0 0 0 #E2E8F0}
+.card-cell.free{background:rgba(150,230,220,0.25);border-color:var(--mint);color:#0D9488;font-size:12px;cursor:default;box-shadow:0 3px 0 var(--mint)}
+
+.card-cell.marked::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top right, transparent calc(50% - 2.5px), var(--coral) calc(50% - 1.5px), var(--coral) calc(50% + 1.5px), transparent calc(50% + 2.5px));
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.card-info{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);font-family:var(--mono);font-weight:600}
+.legend{display:flex;gap:12px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:6px}
+.legend-strike{width:16px;height:2.5px;background:var(--coral);transform:rotate(-45deg)}
+
+.claim-container{display:none;flex-direction:column;gap:10px;margin-bottom:14px;}
+.bingo-btn{width:100%;color:#fff;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:800;font-family:var(--sans);cursor:pointer;animation:pop .4s cubic-bezier(.175,.885,.32,1.275);transition:all 0.1s;box-shadow:0 4px 12px rgba(0,0,0,0.15)}
+.bingo-btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.2)}
+.bingo-btn:active{transform:translateY(0);box-shadow:0 2px 6px rgba(0,0,0,0.15)}
+.btn-qs { background:var(--coral); text-shadow:0 1px 2px rgba(0,0,0,0.1);} 
+.btn-dd { background:var(--yellow); color:#000;} 
+.btn-fc { background:var(--mint); color:#042F2E;} /* Replaced btn-tt with btn-fc */
+.btn-jj { background:linear-gradient(135deg, var(--coral), var(--brand)); color:#fff; font-size:18px; letter-spacing:1px; padding:20px; text-shadow:0 1px 2px rgba(0,0,0,0.2);} 
+@keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+
+.broadcast-banner{display:none;background:linear-gradient(135deg, var(--coral), var(--yellow));border-radius:14px;padding:16px 20px;text-align:center;margin-bottom:14px;animation:pop .4s cubic-bezier(.175,.885,.32,1.275);box-shadow:0 4px 15px rgba(255,115,81,0.25)}
+.broadcast-banner.show{display:block}
+.bc-title{font-size:20px;font-weight:800;color:#fff;letter-spacing:-0.5px;text-shadow:0 1px 2px rgba(0,0,0,0.1)}
+.bc-sub{font-size:13px;color:rgba(255,255,255,.9);margin-top:4px;font-weight:600}
+
+.win-overlay{display:none;position:fixed;inset:0;background:rgba(255,255,255,.95);z-index:100;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px;backdrop-filter:blur(5px)}
+.win-overlay.show{display:flex}
+.win-emoji{font-size:72px;animation:bounce .7s infinite alternate}
+@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-14px)}}
+.win-title{font-size:38px;font-weight:800;margin:12px 0 8px;color:var(--coral);letter-spacing:-1px}
+.win-msg{font-size:16px;color:var(--text);line-height:1.6;font-weight:600}
+.win-close{margin-top:28px;background:var(--brand);border:none;color:#fff;border-radius:12px;padding:14px 32px;font-size:15px;font-weight:700;font-family:var(--sans);cursor:pointer;box-shadow:0 4px 12px rgba(30,34,170,0.25)}
+
+.conn-status{font-size:11px;color:var(--muted);font-family:var(--mono);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="logo">
+      <img src="logo.jpg" alt="myHQ Logo" class="logo-img">
+      <div><div class="logo-title">Bingo</div><div class="logo-sub">Player</div></div>
+    </div>
+    <div class="conn-status" id="conn-status">—</div>
+  </div>
+
+  <div id="join-screen">
+    <div class="join-hero">
+      <span class="join-emoji">🎱</span>
+      <div class="join-title">Join the Game</div>
+      <div class="join-sub">Enter your details and room code to get your unique Bingo card.</div>
+    </div>
+    <div class="join-form">
+      <div class="field">
+        <label class="field-label">Your Name</label>
+        <input class="field-input" id="p-name" placeholder="e.g. Priya Sharma">
+      </div>
+      <div class="field">
+        <label class="field-label">Company Email</label>
+        <input class="field-input" id="p-email" type="email" placeholder="priya.sharma@myhq.in">
+      </div>
+      <div class="field">
+        <label class="field-label">Room Code</label>
+        <input class="field-input code-input" id="p-room" placeholder="MHQ-XXX" maxlength="7">
+      </div>
+      <button class="join-btn" id="join-btn" onclick="joinGame()">Get My Card →</button>
+      <div class="error-msg" id="join-error"></div>
+    </div>
+  </div>
+
+  <div id="game-screen">
+    <div class="player-bar">
+      <div>
+        <div class="player-name-show" id="show-name">—</div>
+        <div class="player-email-show" id="show-email">—</div>
+      </div>
+      <div style="text-align: right;">
+        <div class="room-badge" id="show-room">—</div>
+        <br>
+        <button onclick="leaveGame()" style="background:none; border:none; color:var(--coral); font-family:var(--mono); font-size:10px; font-weight:700; cursor:pointer; text-transform:uppercase; letter-spacing:1px;">Leave Room</button>
+      </div>
+    </div>
+
+    <div class="broadcast-banner" id="broadcast-banner">
+      <div class="bc-title">🎉 <span id="bc-name">Someone</span></div>
+      <div class="bc-sub">Wait for the next number!</div>
+    </div>
+
+    <div class="call-ticker">
+      <div>
+        <div class="ticker-label">Last Called</div>
+        <div class="ticker-val" id="ticker-val">Waiting…</div>
+      </div>
+      <div class="ticker-right" id="ticker-right">Numbers called: 0</div>
+    </div>
+
+    <div class="claim-container" id="claim-buttons">
+      <button class="bingo-btn btn-qs" id="btn-qs" onclick="claimBingo('Quick Strike')" style="display:none;">1 Line: Quick Strike!</button>
+      <button class="bingo-btn btn-dd" id="btn-dd" onclick="claimBingo('Double Dhamaka')" style="display:none;">2 Lines: Double Dhamaka!</button>
+      <button class="bingo-btn btn-fc" id="btn-fc" onclick="claimBingo('Four Corners')" style="display:none;">4 Corners: Corner Capture!</button>
+      <button class="bingo-btn btn-jj" id="btn-jj" onclick="claimBingo('Jackpot Jashn')" style="display:none;">FULL HOUSE: Jackpot Jashn!</button>
+    </div>
+
+    <div class="card-wrap">
+      <div class="card-header-row">
+        <div class="col-lbl">B</div><div class="col-lbl">I</div>
+        <div class="col-lbl">N</div><div class="col-lbl">G</div><div class="col-lbl">O</div>
+      </div>
+      <div class="card-grid" id="card-grid"></div>
+      <div class="card-info">
+        <div class="legend">
+          <div class="legend-item"><div class="legend-strike"></div><span>Manually marked by you</span></div>
+        </div>
+        <div id="match-count">0 marked</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="win-overlay" id="win-overlay">
+  <div class="win-emoji">🎉</div>
+  <div class="win-title" id="win-overlay-title">CLAIM SENT!</div>
+  <div class="win-msg" id="win-msg">Your claim has been sent to the admin!</div>
+  <button class="win-close" onclick="document.getElementById('win-overlay').classList.remove('show')">Keep Playing</button>
+</div>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import{getDatabase,ref,set,get,onValue,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB59Bek7qL6ip2PMjW1JwhbbnGQg2cXP1Y",
+  authDomain: "bingo-2d4a0.firebaseapp.com",
+  databaseURL: "https://bingo-2d4a0-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "bingo-2d4a0",
+  storageBucket: "bingo-2d4a0.firebasestorage.app",
+  messagingSenderId: "775384232552",
+  appId: "1:775384232552:web:b41b9b2e1d1a9723b141dd",
+  measurementId: "G-Q4HLGWDKWE"
+};
+
+const LETTERS=['B','I','N','G','O'];
+const RANGES={B:[1,15],I:[16,30],N:[31,45],G:[46,60],O:[61,75]};
+
+let db,roomId,playerName,playerEmail,playerId;
+let cardNumbers=[];
+let calledByAdmin=new Set();
+let manualMarks=new Set([12]); // FREE square index is always marked
+let demoMode=false;
+let wonPrizes = {}; 
+
+function shuffle(arr){return[...arr].sort(()=>Math.random()-.5);}
+
+function generateCard(){
+  const cols=[];
+  for(const[l,[min,max]]of Object.entries(RANGES)){
+    const pool=[];for(let i=min;i<=max;i++)pool.push(i);
+    cols.push(shuffle(pool).slice(0,5));
+  }
+  const flat=[];
+  for(let col=0;col<5;col++)for(let row=0;row<5;row++)flat.push(cols[col][row]);
+  return flat;
+}
+
+function emailToKey(email){return email.toLowerCase().replace(/[.#$[\]]/g,'_');}
+
+window.joinGame=async function(){
+  playerName=document.getElementById('p-name').value.trim();
+  playerEmail=document.getElementById('p-email').value.trim().toLowerCase();
+  roomId=document.getElementById('p-room').value.trim().toUpperCase();
+
+  const errEl=document.getElementById('join-error');
+  errEl.style.display='none';
+
+  if(!playerName){showErr('Please enter your name.');return;}
+  if(!playerEmail||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(playerEmail)){showErr('Please enter a valid company email address.');return;}
+  if(!roomId){showErr('Please enter the room code.');return;}
+
+  const btn=document.getElementById('join-btn');
+  btn.disabled=true;btn.textContent='Joining…';
+
+  if(demoMode){
+    proceedToGame();return;
+  }
+
+  try{
+    const emailKey=emailToKey(playerEmail);
+    const existingSnap=await get(ref(db,`rooms/${roomId}/players/${emailKey}`));
+
+    if(existingSnap.exists()){
+      const existing=existingSnap.val();
+      cardNumbers=existing.card;
+      playerName=existing.name;
+      playerId=emailKey;
+      
+      localStorage.setItem('myhq_bingo_session', JSON.stringify({name: playerName, email: playerEmail, room: roomId}));
+      
+      document.getElementById('show-name').textContent=playerName;
+      document.getElementById('show-email').textContent=playerEmail;
+      document.getElementById('show-room').textContent=roomId;
+      document.getElementById('join-screen').style.display='none';
+      document.getElementById('game-screen').style.display='block';
+      document.getElementById('conn-status').textContent='Rejoined';
+      
+      const storageKey = `myhq_bingo_marks_${roomId}_${playerId}`;
+      const savedMarks = localStorage.getItem(storageKey);
+      if(savedMarks){
+         manualMarks = new Set(JSON.parse(savedMarks));
+      }
+      
+      renderCard();
+      startListening();
+      return;
+    }
+
+    cardNumbers=generateCard();
+    playerId=emailKey;
+    await set(ref(db,`rooms/${roomId}/players/${emailKey}`),{
+      name:playerName,
+      email:playerEmail,
+      card:cardNumbers,
+      joinedAt:serverTimestamp()
+    });
+    
+    localStorage.setItem('myhq_bingo_session', JSON.stringify({name: playerName, email: playerEmail, room: roomId}));
+
+    proceedToGame();
+
+  }catch(e){
+    showErr('Could not connect to game server. Running in demo mode.');
+    demoMode=true;
+    cardNumbers=generateCard();
+    proceedToGame();
+  }
+};
+
+function proceedToGame(){
+  document.getElementById('show-name').textContent=playerName;
+  document.getElementById('show-email').textContent=playerEmail;
+  document.getElementById('show-room').textContent=roomId;
+  document.getElementById('join-screen').style.display='none';
+  document.getElementById('game-screen').style.display='block';
+  document.getElementById('conn-status').textContent=demoMode?'Demo':'Live';
+  
+  const storageKey = `myhq_bingo_marks_${roomId}_${playerId}`;
+  const savedMarks = localStorage.getItem(storageKey);
+  if(savedMarks){
+     manualMarks = new Set(JSON.parse(savedMarks));
+  } else {
+     manualMarks = new Set([12]);
+  }
+  
+  renderCard();
+  if(!demoMode)startListening();
+}
+
+function startListening(){
+  onValue(ref(db,`rooms/${roomId}/calledNumbers`),snap=>{
+    calledByAdmin=new Set(snap.exists()?snap.val():[]);
+    checkBingo(); 
+    updateTicker();
+  });
+  
+  onValue(ref(db,`rooms/${roomId}/wonPrizes`),snap=>{
+    wonPrizes = snap.exists() ? snap.val() : {};
+    checkBingo();
+  });
+
+  onValue(ref(db,`rooms/${roomId}/winner`),snap=>{
+    if(snap.exists()&&snap.val()){
+      document.getElementById('bc-name').textContent=snap.val();
+      document.getElementById('broadcast-banner').classList.add('show');
+    }else{
+      document.getElementById('broadcast-banner').classList.remove('show');
+    }
+  });
+}
+
+function renderCard(){
+  const grid=document.getElementById('card-grid');
+  grid.innerHTML='';
+
+  for(let idx=0;idx<25;idx++){
+    const col=Math.floor(idx/5);
+    const cell=document.createElement('div');
+    cell.className='card-cell';
+
+    if(idx===12){
+      cell.classList.add('free','marked');
+      cell.textContent='FREE';
+    }else{
+      const num=cardNumbers[idx];
+      const playerMarked=manualMarks.has(idx);
+
+      cell.textContent=num;
+
+      if(playerMarked){
+        cell.classList.add('marked');
+      }
+
+      cell.onclick=()=>{
+        if(manualMarks.has(idx)){
+          manualMarks.delete(idx);
+        }else{
+          manualMarks.add(idx);
+        }
+        
+        const storageKey = `myhq_bingo_marks_${roomId}_${playerId}`;
+        localStorage.setItem(storageKey, JSON.stringify([...manualMarks]));
+        
+        renderCard();
+        checkBingo();
+      };
+    }
+    grid.appendChild(cell);
+  }
+  
+  const userMarks = Math.max(0, manualMarks.size - 1);
+  document.getElementById('match-count').textContent=`${userMarks} marked`;
+}
+
+function updateTicker(){
+  const total=calledByAdmin.size;
+  if(total>0){
+    const arr=[...calledByAdmin];
+    document.getElementById('ticker-val').textContent=arr[arr.length-1];
+  }
+  document.getElementById('ticker-right').innerHTML=`Numbers called: ${total}`;
+}
+
+function isValidMark(col,row){
+  const idx=col*5+row;
+  if(idx===12)return true; 
+  if(!manualMarks.has(idx)) return false; 
+  const key=`${LETTERS[col]}${cardNumbers[idx]}`;
+  return calledByAdmin.has(key);
+}
+
+function checkBingo(){
+  let completedLines = 0;
+  let validMatchedCells = 0;
+  
+  // Check Four Corners
+  let fourCornersValid = isValidMark(0,0) && isValidMark(0,4) && isValidMark(4,0) && isValidMark(4,4);
+
+  for(let row=0;row<5;row++){ if([0,1,2,3,4].every(col=>isValidMark(col,row))) completedLines++; }
+  for(let col=0;col<5;col++){ if([0,1,2,3,4].every(row=>isValidMark(col,row))) completedLines++; }
+  if([0,1,2,3,4].every(i=>isValidMark(i,i))) completedLines++;
+  if([0,1,2,3,4].every(i=>isValidMark(i,4-i))) completedLines++;
+
+  for(let col=0;col<5;col++){
+    for(let row=0;row<5;row++){
+      if(isValidMark(col,row)) validMatchedCells++;
+    }
+  }
+
+  const container = document.getElementById('claim-buttons');
+  const btnQS = document.getElementById('btn-qs');
+  const btnDD = document.getElementById('btn-dd');
+  const btnFC = document.getElementById('btn-fc');
+  const btnJJ = document.getElementById('btn-jj');
+
+  let showAny = false;
+
+  if(completedLines >= 1 && !wonPrizes['Quick Strike']) { btnQS.style.display = 'block'; showAny = true; } else { btnQS.style.display = 'none'; }
+  if(completedLines >= 2 && !wonPrizes['Double Dhamaka']) { btnDD.style.display = 'block'; showAny = true; } else { btnDD.style.display = 'none'; }
+  if(fourCornersValid && !wonPrizes['Four Corners']) { btnFC.style.display = 'block'; showAny = true; } else { btnFC.style.display = 'none'; }
+  if(validMatchedCells === 25 && !wonPrizes['Jackpot Jashn']) { btnJJ.style.display = 'block'; showAny = true; } else { btnJJ.style.display = 'none'; }
+
+  container.style.display = showAny ? 'flex' : 'none';
+}
+
+window.claimBingo=async function(claimType){
+  document.getElementById('win-overlay-title').textContent = claimType;
+  document.getElementById('win-msg').textContent=`${playerName}, you claimed ${claimType}! The admin is verifying your card now.`;
+  document.getElementById('win-overlay').classList.add('show');
+  
+  if(!demoMode&&db){
+    const claimKey=emailToKey(playerEmail);
+    const uniqueClaimKey = claimKey + "_" + Date.now();
+    
+    await set(ref(db,`rooms/${roomId}/claims/${uniqueClaimKey}`),{
+      name:playerName,
+      email:playerEmail,
+      emailKey: claimKey,
+      type: claimType,
+      ts:Date.now()
+    });
+  }
+};
+
+function showErr(msg){
+  const el=document.getElementById('join-error');
+  el.textContent=msg;el.style.display='block';
+  const btn=document.getElementById('join-btn');
+  btn.disabled=false;btn.textContent='Get My Card →';
+}
+
+window.leaveGame = function() {
+  localStorage.removeItem('myhq_bingo_session');
+  location.reload();
+};
+
+async function init(){
+  const params=new URLSearchParams(location.search);
+  const roomParam=params.get('room');
+  
+  try{
+    const app=initializeApp(firebaseConfig);
+    db=getDatabase(app);
+    document.getElementById('conn-status').textContent='Connected';
+    
+    const savedSession = localStorage.getItem('myhq_bingo_session');
+    if(savedSession){
+       const session = JSON.parse(savedSession);
+       document.getElementById('p-name').value = session.name;
+       document.getElementById('p-email').value = session.email;
+       document.getElementById('p-room').value = roomParam || session.room; 
+       
+       joinGame();
+    } else if(roomParam) {
+       document.getElementById('p-room').value=roomParam;
+    }
+  }catch(e){
+    demoMode=true;
+    document.getElementById('conn-status').textContent='Demo';
+  }
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>myHQ Bingo — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --brand: #1E22AA;
+  --coral: #FF7351;
+  --yellow: #FFB848;
+  --peach: #F4BEAA;
+  --mint: #96E6DC;
+  
+  --surface: #FFFFFF;
+  --border: #E2E8F0;
+  --text: #1E293B;
+  --muted: #64748B;
+  --mono: 'Roboto Mono', monospace;
+  --sans: 'Inter', sans-serif;
+}
+
+body{
+  font-family:var(--sans);
+  background: linear-gradient(135deg, rgba(244,190,170,0.15) 0%, rgba(150,230,220,0.15) 100%);
+  background-attachment:fixed;
+  color:var(--text);
+  min-height:100vh;
+  padding:24px;
+}
+
+.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid rgba(0,0,0,0.06)}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-img{height:44px;width:auto;border-radius:6px;box-shadow:0 4px 10px rgba(0,0,0,0.08);} 
+.logo-title{font-size:22px;font-weight:800;letter-spacing:-0.5px;color:var(--brand)}
+.logo-sub{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-family:var(--mono);margin-top:2px;font-weight:700}
+
+.live-pill{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:8px 18px;font-size:13px;font-family:var(--mono);font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.02)}
+.dot{width:8px;height:8px;border-radius:50%;background:#10B981;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.room-bar{background:#fff;border:1px solid rgba(255,115,81,0.3);border-radius:14px;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;box-shadow:0 4px 15px rgba(255,115,81,0.05)}
+.room-label{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-family:var(--mono);margin-bottom:6px;font-weight:700}
+.room-code{font-size:28px;font-weight:800;color:var(--coral);font-family:var(--mono);letter-spacing:6px}
+.room-actions{display:flex;gap:10px}
+.btn-ghost{background:#F8FAFC;border:1px solid #CBD5E1;color:var(--text);border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;font-family:var(--sans);cursor:pointer;transition:all .2s}
+.btn-ghost:hover{background:#F1F5F9;color:var(--coral);border-color:var(--coral)}
+
+.winner-banner{display:none;background:linear-gradient(135deg, var(--coral), var(--yellow));border-radius:16px;padding:20px 24px;margin-bottom:20px;animation:pop .5s cubic-bezier(.175,.885,.32,1.275);box-shadow:0 6px 20px rgba(255,115,81,0.25)}
+.winner-banner.show{display:flex;align-items:center;justify-content:space-between}
+.winner-text{font-size:26px;font-weight:800;color:#fff;letter-spacing:-0.5px;text-shadow:0 1px 2px rgba(0,0,0,0.1)}
+.winner-sub{font-size:14px;color:rgba(255,255,255,.9);margin-top:4px;font-weight:600}
+.dismiss-btn{background:rgba(0,0,0,.2);border:none;color:#fff;border-radius:8px;padding:8px 14px;cursor:pointer;font-family:var(--sans);font-weight:600;transition:background .2s}
+.dismiss-btn:hover{background:rgba(0,0,0,.3)}
+@keyframes pop{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.03)}
+.stat-num{font-size:32px;font-weight:800;color:var(--coral);font-family:var(--mono)}
+.stat-label{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:4px;font-weight:700}
+
+.main-grid{display:grid;grid-template-columns:1fr 300px;gap:16px;margin-bottom:16px}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,0.04)}
+.panel-label{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-family:var(--mono);margin-bottom:16px;font-weight:700}
+
+.bingo-board{display:grid;grid-template-columns:repeat(15,1fr);gap:5px}
+.board-header{text-align:center;font-weight:800;font-size:16px;padding:8px 2px;grid-column:span 3;color:var(--brand)}
+.num-btn{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:7px;font-size:14px;font-weight:600;font-family:var(--mono);background:#F1F5F9;color:#475569;border:1px solid #E2E8F0;cursor:pointer;transition:all .15s;user-select:none}
+.num-btn:hover{background:#E2E8F0;color:var(--text)}
+.num-btn.called{background:var(--coral);color:#fff;border-color:transparent;font-weight:700;box-shadow:0 2px 6px rgba(255,115,81,0.3)}
+.num-btn.last-called{box-shadow:0 0 0 4px var(--yellow);transform:scale(1.15);z-index:2;position:relative}
+
+.current-call{text-align:center;padding:24px 0 16px}
+.cur-letter{font-size:64px;font-weight:800;line-height:1;color:var(--coral);letter-spacing:-1px}
+.cur-number{font-size:72px;font-weight:800;line-height:1;font-family:var(--mono);color:var(--text)}
+.cur-hint{font-size:15px;color:var(--brand);margin-top:12px;font-family:var(--sans);font-weight:700;padding:0 10px;line-height:1.4}
+
+.call-btn{width:100%;background:linear-gradient(135deg, var(--coral), var(--yellow));color:#fff;border:none;border-radius:12px;padding:16px;font-size:16px;font-weight:800;font-family:var(--sans);cursor:pointer;transition:all .2s;letter-spacing:.5px;margin-top:12px;box-shadow:0 4px 12px rgba(255,115,81,0.25); text-shadow:0 1px 2px rgba(0,0,0,0.1)}
+.call-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(255,115,81,0.35)}
+.call-btn:active{transform:scale(.98)}
+.call-btn:disabled{background:#E2E8F0;color:#94A3B8;box-shadow:none;cursor:not-allowed;text-shadow:none;transform:none}
+
+.reset-btn{width:100%;background:#F8FAFC;color:#ef4444;border:1px solid #fecaca;border-radius:12px;padding:11px;font-size:13px;font-weight:600;font-family:var(--sans);cursor:pointer;transition:all .2s;margin-top:8px}
+.reset-btn:hover{background:#fef2f2}
+
+.recent-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{background:#FFF4F1;border:1px solid rgba(255,115,81,0.2);color:var(--coral);border-radius:8px;padding:5px 11px;font-size:13px;font-weight:700;font-family:var(--mono)}
+
+.announce-input{width:100%;background:#F8FAFC;border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:var(--mono);font-size:13px;margin-bottom:8px;transition:border-color .2s}
+.announce-input:focus{outline:none;border-color:var(--coral);background:#fff}
+
+.progress-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:16px;box-shadow:0 4px 12px rgba(0,0,0,0.03)}
+.progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.progress-bar-bg{background:#F1F5F9;border-radius:100px;height:8px}
+.progress-bar{height:100%;background:linear-gradient(90deg, var(--coral), var(--yellow));border-radius:100px;transition:width .5s ease}
+
+.scroll-panel{max-height:160px;overflow-y:auto;padding-right:4px;}
+.scroll-panel::-webkit-scrollbar {width: 4px;}
+.scroll-panel::-webkit-scrollbar-thumb {background: #CBD5E1; border-radius: 4px;}
+.claim-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+.claim-item:last-child{border-bottom:none}
+.claim-email{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:2px}
+
+.verify-btn{background:rgba(150,230,220,0.2);border:1px solid var(--mint);color:#0D9488;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;font-family:var(--sans);cursor:pointer;white-space:nowrap; transition:all 0.2s;}
+.verify-btn:hover{background:var(--mint); color:#042F2E;}
+
+.player-row{display:flex;align-items:center;padding:7px 0;border-bottom:1px solid var(--border)}
+.player-row:last-child{border-bottom:none}
+.player-dot{width:7px;height:7px;border-radius:50%;background:#10B981;margin-right:10px;flex-shrink:0}
+.player-info-col{flex:1;min-width:0}
+.player-name-txt{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.player-email-txt{font-size:11px;color:var(--muted);font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fb-status{font-size:11px;font-family:var(--mono);color:var(--muted);text-align:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);font-weight:600;}
+@media(max-width:800px){.main-grid{grid-template-columns:1fr}.stats-row{grid-template-columns:repeat(2,1fr)}.bingo-board{grid-template-columns:repeat(5,1fr)}.board-header{grid-column:span 1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="logo">
+      <img src="logo.jpg" alt="myHQ Logo" class="logo-img">
+      <div><div class="logo-title">Bingo</div><div class="logo-sub">Admin Dashboard</div></div>
+    </div>
+    <div class="live-pill"><div class="dot"></div><span id="status-text">Initialising…</span></div>
+  </div>
+
+  <div class="room-bar">
+    <div>
+      <div class="room-label">Room Code — share with your team</div>
+      <div class="room-code" id="room-code-display">——</div>
+    </div>
+    <div class="room-actions">
+      <button class="btn-ghost" onclick="copyLink()">📋 Copy Player Link</button>
+      <button class="btn-ghost" onclick="newRoom()">+ New Room</button>
+    </div>
+  </div>
+
+  <div class="winner-banner" id="winner-banner">
+    <div>
+      <div class="winner-text">🎉 BINGO! <span id="winner-name-display"></span></div>
+      <div class="winner-sub">Verify their card before confirming!</div>
+    </div>
+    <button class="dismiss-btn" onclick="dismissWinner()">Dismiss</button>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat"><div class="stat-num" id="s-called">0</div><div class="stat-label">Called</div></div>
+    <div class="stat"><div class="stat-num" id="s-remain">75</div><div class="stat-label">Remaining</div></div>
+    <div class="stat"><div class="stat-num" id="s-players">0</div><div class="stat-label">Players Online</div></div>
+    <div class="stat"><div class="stat-num" id="s-claims">0</div><div class="stat-label">Bingo Claims</div></div>
+  </div>
+
+  <div class="main-grid">
+    <div class="panel">
+      <div class="panel-label">Full Number Board</div>
+      <div class="bingo-board" id="bingo-board"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="panel">
+        <div class="panel-label">Current Call & Script</div>
+        <div class="current-call">
+          <div class="cur-letter" id="cur-letter">—</div>
+          <div class="cur-number" id="cur-number">—</div>
+          <div class="cur-hint" id="cur-hint">Press call to begin</div>
+        </div>
+        <button class="call-btn" id="call-btn" onclick="callNumber()">Call Next Number</button>
+        <button class="reset-btn" onclick="resetGame()">↺ Reset Game</button>
+      </div>
+      <div class="panel">
+        <div class="panel-label">Last 5 Calls</div>
+        <div class="recent-chips" id="recent-chips"><span style="font-size:12px;color:var(--muted);font-family:var(--mono)">None yet</span></div>
+      </div>
+      <div class="panel">
+        <div class="panel-label">Announce Winner</div>
+        <input class="announce-input" id="winner-input" placeholder="Winner's name…">
+        <button class="call-btn" style="margin-top:0;font-size:14px; box-shadow:none;" onclick="announceWinner()">🎉 Announce BINGO!</button>
+      </div>
+      <div class="panel">
+        <div class="panel-label">Bingo Claims (<span id="claims-count">0</span>)</div>
+        <div class="scroll-panel" id="claims-list"><div style="font-size:12px;color:var(--muted);font-family:var(--mono)">No claims yet</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <div class="panel">
+      <div class="panel-label">Players Registered (<span id="players-count">0</span>)</div>
+      <div class="scroll-panel" id="players-list"><div style="font-size:12px;color:var(--muted);font-family:var(--mono)">No players yet</div></div>
+    </div>
+    <div class="progress-wrap" style="margin-bottom:0">
+      <div class="progress-header">
+        <div class="panel-label" style="margin:0">Progress</div>
+        <div style="font-size:12px;font-family:var(--mono);color:var(--text);font-weight:700;" id="progress-label">0 / 75</div>
+      </div>
+      <div class="progress-bar-bg"><div class="progress-bar" id="progress-bar" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="fb-status" id="fb-status">Connecting to Firebase…</div>
+</div>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import{getDatabase,ref,set,get,onValue,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB59Bek7qL6ip2PMjW1JwhbbnGQg2cXP1Y",
+  authDomain: "bingo-2d4a0.firebaseapp.com",
+  databaseURL: "https://bingo-2d4a0-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "bingo-2d4a0",
+  storageBucket: "bingo-2d4a0.firebasestorage.app",
+  messagingSenderId: "775384232552",
+  appId: "1:775384232552:web:b41b9b2e1d1a9723b141dd",
+  measurementId: "G-Q4HLGWDKWE"
+};
+
+const BINGO_HINTS = {
+  1: "Single number 1... The hustle has just begun!",
+  2: "Single number 2... A virtual office address for you!",
+  3: "Single number 3... 'Is the pantry coffee really free?'",
+  4: "Single number 4... Walk through the coworking door!",
+  5: "Single number 5... Barely made it here alive! (Gurgaon traffic)",
+  6: "Single number 6... Another bug for Tech to fix!",
+  7: "Single number 7... Thala for a reason, we're in heaven!",
+  8: "Single number 8... Why is the client always late?",
+  9: "Single number 9... 'This is fine,' everything is fine!",
+  10: "One zero 10... Don't send that 'Per my last email' again!",
+  11: "One one 11... Stuck at Silk Board, not quite heaven!",
+  12: "One two 12... Into the spreadsheet we shall delve!",
+  13: "One three 13... My laptop screen is never clean!",
+  14: "One four 14... The Sales team is a closing machine!",
+  15: "One five 15... Keeping the CRM squeaky clean!",
+  16: "One six 16... I need more caffeine in my bloodstream!",
+  17: "One seven 17... I'm just a corporate guy, living the dream! (Maybe)",
+  18: "One eight 18... Still fighting the pantry vending machine!",
+  19: "One nine 19... COVID's gone, but we're still on screen!",
+  20: "Two zero 20... We’ve got workspace options in plenty!",
+  21: "Two one 21... The weekend is finally coming up!",
+  22: "Two two 22... Two little ducks with a terrace view!",
+  23: "Two three 23... Product Design is the key!",
+  24: "Two four 24... 'Let's circle back' — don't say it no more!",
+  25: "Two five 25... The marketplace is truly alive!",
+  26: "Two six 26... Interns are legends, putting in the work!",
+  27: "Two seven 27... Sent the invoice to Finance heaven!",
+  28: "Two eight 28... Is the Wi-Fi working straight?",
+  29: "Two nine 29... 'Let's take this offline,' it'll be fine!",
+  30: "Three zero 30... My desktop layout's looking dirty!",
+  31: "Three one 31... Salary's credited! Let's have fun!",
+  32: "Three two 32... A managed office with a view!",
+  33: "Three three 33... All-hands meeting, come and see!",
+  34: "Three four 34... Ghosting clients? Not anymore!",
+  35: "Three five 35... How many pings did I just derive!",
+  36: "Three six 36... Marketing’s got some clever tricks!",
+  37: "Three seven 37... My 'Out of Office' is pure heaven!",
+  38: "Three eight 38... Don’t let the client hesitate!",
+  39: "Three nine 39... Your reimbursement is next in line!",
+  40: "Four zero 40... Life begins at forty—keep the branding sporty!",
+  41: "Four one 41... The coding sprint is finally done!",
+  42: "Four two 42... We’ve got a workspace just for you!",
+  43: "Four three 43... As busy as a honeybee!",
+  44: "Four four 44... Open floor plan? Give me a door!",
+  45: "Four five 45... The Friday energy has arrived!",
+  46: "Four six 46... Searching for a room that doesn't exist!",
+  47: "Four seven 47... A corner office in 'Startup Heaven'!",
+  48: "Four eight 48... Is the contract looking straight?",
+  49: "Four nine 49... I’ve got 99 problems but my space is fine!",
+  50: "Five zero 50... Nifty fifty, our budget is looking thrifty!",
+  51: "Five one 51... Area 51, the deployment is done!",
+  52: "Five two 52... Another ticket for the Tech crew!",
+  53: "Five three 53... Who took my charger? Give it to me!",
+  54: "Five four 54... Check the inventory once more!",
+  55: "Five five 55... Working late just to survive!",
+  56: "Five six 56... Interns are great, they're the ones who fix!",
+  57: "Five seven 57... A coworking spot in Noida heaven!",
+  58: "Five eight 58... Is the tea break ready yet, mate?",
+  59: "Five nine 59... One minute left on the deadline line!",
+  60: "Six zero 60... This growth strategy is looking nifty!",
+  61: "Six one 61... Second to none, we’ve already won!",
+  62: "Six two 62... Booking a cabin for me and you!",
+  63: "Six three 63... Space for the whole company!",
+  64: "Six four 64... Knocking on the landlord’s door!",
+  65: "Six five 65... Keeping the startup vibe alive!",
+  66: "Six six 66... Order some pizza, that’s the fix!",
+  67: "Six seven 67... A property lead from Indiranagar heaven!",
+  68: "Six eight 68... The revenue is looking great!",
+  69: "Six nine 69... Our office designs are divine!",
+  70: "Seven zero 70... The AC is set to freezing cold-y!",
+  71: "Seven one 71... The brainstorming has just begun!",
+  72: "Seven two 72... A premium suite with a view!",
+  73: "Seven three 73... No more buffering, the Wi-Fi’s free!",
+  74: "Seven four 74... We’re leading the property war!",
+  75: "Seven five 75... BINGO! myHQ is the best place alive!"
+};
+
+const LETTERS=['B','I','N','G','O'];
+const RANGES={B:[1,15],I:[16,30],N:[31,45],G:[46,60],O:[61,75]};
+let db,roomId,calledNums=[],callQueue=[];
+const allNumbers=[];
+for(const[l,[min,max]]of Object.entries(RANGES))for(let i=min;i<=max;i++)allNumbers.push({letter:l,num:i});
+
+async function init(){
+  try{
+    const app=initializeApp(firebaseConfig);
+    db=getDatabase(app);
+    document.getElementById('fb-status').textContent='✓ Firebase connected';
+    
+    const params=new URLSearchParams(location.search);
+    let roomFromUrl = params.get('room');
+    let savedRoom = localStorage.getItem('myhq_bingo_room');
+
+    if(roomFromUrl){
+       roomId = roomFromUrl;
+       localStorage.setItem('myhq_bingo_room', roomId);
+    } else if(savedRoom){
+       roomId = savedRoom;
+       history.replaceState(null,'',`?room=${roomId}`);
+    } else {
+       roomId = genId();
+       localStorage.setItem('myhq_bingo_room', roomId);
+       history.replaceState(null,'',`?room=${roomId}`);
+    }
+    
+    document.getElementById('room-code-display').textContent=roomId;
+    await loadOrCreate();
+    listenRoom();listenPlayers();listenClaims();
+  }catch(e){
+    document.getElementById('fb-status').textContent='⚠ Firebase not configured — running in demo mode';
+    document.getElementById('status-text').textContent='Demo Mode';
+    document.getElementById('room-code-display').textContent='MHQ-DEMO';
+    initDemo();
+  }
+}
+
+function genId(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return'MHQ-'+Array.from({length:3},()=>c[Math.floor(Math.random()*c.length)]).join('');}
+function parseCall(s){return{letter:s[0],num:parseInt(s.slice(1))};}
+
+async function loadOrCreate(){
+  const snap=await get(ref(db,`rooms/${roomId}`));
+  if(!snap.exists()){
+    callQueue=[...allNumbers].sort(()=>Math.random()-.5);
+    await set(ref(db,`rooms/${roomId}`),{status:'waiting',calledNumbers:[],callQueue:callQueue.map(c=>`${c.letter}${c.num}`),lastCall:null,createdAt:serverTimestamp()});
+  }else{
+    const d=snap.val();
+    calledNums=(d.calledNumbers||[]).map(parseCall);
+    callQueue=(d.callQueue||[]).map(parseCall);
+  }
+  renderBoard();updateUI();
+}
+
+function listenRoom(){
+  onValue(ref(db,`rooms/${roomId}`),snap=>{
+    if(!snap.exists())return;
+    const d=snap.val();
+    calledNums=(d.calledNumbers||[]).map(parseCall);
+    callQueue=(d.callQueue||[]).map(parseCall);
+    renderBoard();updateUI();
+    if(d.winner)showWinnerBanner(d.winner);
+    else document.getElementById('winner-banner').classList.remove('show');
+  });
+}
+
+function listenPlayers(){
+  onValue(ref(db,`rooms/${roomId}/players`),snap=>{
+    const list=document.getElementById('players-list');
+    const countEl=document.getElementById('players-count');
+    if(!snap.exists()){list.innerHTML='<div style="font-size:12px;color:var(--muted);font-family:var(--mono)">No players yet</div>';countEl.textContent='0';document.getElementById('s-players').textContent='0';return;}
+    const players=snap.val();
+    const entries=Object.values(players).sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+    countEl.textContent=entries.length;
+    document.getElementById('s-players').textContent=entries.length;
+    list.innerHTML=entries.map(p=>`<div class="player-row"><div class="player-dot"></div><div class="player-info-col"><div class="player-name-txt">${esc(p.name||'Unknown')}</div><div class="player-email-txt">${esc(p.email||'')}</div></div></div>`).join('');
+  });
+}
+
+function listenClaims(){
+  onValue(ref(db,`rooms/${roomId}/claims`),snap=>{
+    const list=document.getElementById('claims-list');
+    const countEl=document.getElementById('claims-count');
+    if(!snap.exists()){list.innerHTML='<div style="font-size:12px;color:var(--muted);font-family:var(--mono)">No claims yet</div>';countEl.textContent='0';document.getElementById('s-claims').textContent='0';return;}
+    const claims=snap.val();
+    const entries=Object.entries(claims).sort((a,b)=>(b[1].ts||0)-(a[1].ts||0));
+    countEl.textContent=entries.length;document.getElementById('s-claims').textContent=entries.length;
+    
+    list.innerHTML=entries.map(([,c])=>`
+      <div class="claim-item">
+        <div>
+          <div style="font-weight:600; color:var(--text);">${esc(c.name)} <span style="color:var(--coral); font-size:11px; font-weight:800; margin-left:4px;">[${esc(c.type || 'BINGO')}]</span></div>
+          <div class="claim-email">${esc(c.email||'')}</div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--muted)">${new Date(c.ts).toLocaleTimeString()}</div>
+        </div>
+        <button class="verify-btn" onclick="window.verifyClaim('${c.emailKey}', '${esc(c.type || 'BINGO')}')">Verify</button>
+      </div>`).join('');
+  });
+}
+
+window.verifyClaim = async function(emailKey, claimType) {
+  try {
+     const snap = await get(ref(db, `rooms/${roomId}/players/${emailKey}`));
+     if(!snap.exists()){ alert("Error: Player data not found!"); return; }
+     
+     const player = snap.val();
+     const card = player.card;
+     const calledSet = new Set(calledNums.map(c => `${c.letter}${c.num}`));
+
+     function isVerified(col, row) {
+       const idx = col * 5 + row;
+       if (idx === 12) return true; // FREE
+       const num = card[idx];
+       const letter = LETTERS[col];
+       return calledSet.has(`${letter}${num}`);
+     }
+
+     let lines = 0;
+     let matchedCells = 0;
+     let fourCorners = isVerified(0,0) && isVerified(0,4) && isVerified(4,0) && isVerified(4,4);
+     
+     for(let r=0;r<5;r++) if([0,1,2,3,4].every(c=>isVerified(c,r))) lines++;
+     for(let c=0;c<5;c++) if([0,1,2,3,4].every(r=>isVerified(c,r))) lines++;
+     
+     if([0,1,2,3,4].every(i=>isVerified(i,i))) lines++;
+     if([0,1,2,3,4].every(i=>isVerified(i,4-i))) lines++;
+     
+     for(let c=0;c<5;c++) for(let r=0;r<5;r++) if(isVerified(c,r)) matchedCells++;
+
+     let isValid = false;
+     if (claimType === 'Quick Strike' && lines >= 1) isValid = true;
+     if (claimType === 'Double Dhamaka' && lines >= 2) isValid = true;
+     if (claimType === 'Four Corners' && fourCorners) isValid = true;
+     if (claimType === 'Jackpot Jashn' && matchedCells === 25) isValid = true;
+
+     if (isValid) {
+       if(confirm(`✅ LEGITIMATE CLAIM!\n\n${player.name} successfully achieved ${claimType}.\n\nDo you want to confirm them as the winner and lock this prize so no one else can claim it?`)) {
+           await set(ref(db, `rooms/${roomId}/wonPrizes/${claimType}`), player.name);
+           await set(ref(db, `rooms/${roomId}/winner`), `${player.name} won ${claimType}!`);
+           document.getElementById('winner-input').value = '';
+       }
+     } else {
+       alert(`❌ INVALID CLAIM!\n\n${player.name} tried to claim ${claimType}, but they don't actually have the required matching numbers based on what has been called.`);
+     }
+
+  } catch(e) {
+     console.error(e);
+     alert("There was an error trying to verify this claim.");
+  }
+};
+
+window.callNumber=async function(){
+  if(!callQueue.length)return;
+  const pick=callQueue[callQueue.length-1],nq=callQueue.slice(0,-1),nc=[...calledNums,pick];
+  await set(ref(db,`rooms/${roomId}/calledNumbers`),nc.map(c=>`${c.letter}${c.num}`));
+  await set(ref(db,`rooms/${roomId}/callQueue`),nq.map(c=>`${c.letter}${c.num}`));
+  await set(ref(db,`rooms/${roomId}/lastCall`),`${pick.letter}${pick.num}`);
+  await set(ref(db,`rooms/${roomId}/status`),'playing');
+};
+
+window.resetGame=async function(){
+  if(!confirm('Reset the game? All progress will be lost.'))return;
+  const fq=[...allNumbers].sort(()=>Math.random()-.5);
+  await set(ref(db,`rooms/${roomId}`),{status:'waiting',calledNumbers:[],winner:null,claims:null,wonPrizes:null,callQueue:fq.map(c=>`${c.letter}${c.num}`),lastCall:null});
+};
+
+window.announceWinner=async function(){
+  const name=document.getElementById('winner-input').value.trim();
+  if(!name)return;
+  await set(ref(db,`rooms/${roomId}/winner`),name);
+  document.getElementById('winner-input').value='';
+};
+
+window.dismissWinner=async function(){
+  await set(ref(db,`rooms/${roomId}/winner`),null);
+};
+
+window.copyLink=function(){
+  const url=location.href.replace(/admin.*\.html/,'index.html');
+  navigator.clipboard.writeText(url).then(()=>{
+    const b=document.querySelector('.btn-ghost');b.textContent='✓ Copied!';
+    setTimeout(()=>{b.textContent='📋 Copy Player Link';},2000);
+  });
+};
+
+window.newRoom=function(){
+  if(confirm('Create a new room?')) {
+    localStorage.removeItem('myhq_bingo_room');
+    window.location.href = window.location.pathname;
+  }
+};
+
+function showWinnerBanner(name){
+  document.getElementById('winner-name-display').textContent=name;
+  document.getElementById('winner-banner').classList.add('show');
+}
+
+function renderBoard(){
+  const board=document.getElementById('bingo-board');board.innerHTML='';
+  const called=new Set(calledNums.map(c=>`${c.letter}${c.num}`));
+  const last=calledNums.length?`${calledNums[calledNums.length-1].letter}${calledNums[calledNums.length-1].num}`:null;
+  LETTERS.forEach(l=>{const h=document.createElement('div');h.className='board-header';h.textContent=l;board.appendChild(h);});
+  for(const[l,[min,max]]of Object.entries(RANGES)){
+    for(let i=min;i<=max;i++){
+      const k=`${l}${i}`,btn=document.createElement('div');
+      btn.className='num-btn'+(called.has(k)?' called':'')+(k===last?' last-called':'');
+      btn.textContent=i;board.appendChild(btn);
+    }
+  }
+}
+
+function updateUI(){
+  const called=calledNums.length,remain=75-called;
+  document.getElementById('s-called').textContent=called;
+  document.getElementById('s-remain').textContent=remain;
+  document.getElementById('progress-label').textContent=`${called} / 75`;
+  document.getElementById('progress-bar').style.width=Math.round(called/75*100)+'%';
+  
+  if(calledNums.length){
+    const l=calledNums[calledNums.length-1];
+    document.getElementById('status-text').textContent=`Last: ${l.letter}${l.num}`;
+    document.getElementById('cur-letter').textContent=l.letter;
+    document.getElementById('cur-number').textContent=l.num;
+    document.getElementById('cur-hint').textContent = BINGO_HINTS[l.num] || (l.letter + ' — ' + l.num);
+  } else {
+    document.getElementById('status-text').textContent='Game Ready';
+    document.getElementById('cur-letter').textContent='—';
+    document.getElementById('cur-number').textContent='—';
+    document.getElementById('cur-hint').textContent='Press call to begin';
+  }
+
+  const last5=calledNums.slice(-5).reverse();
+  document.getElementById('recent-chips').innerHTML=last5.length?last5.map(c=>`<div class="chip">${c.letter}${c.num}</div>`).join(''):'<span style="font-size:12px;color:var(--muted);font-family:var(--mono)">None yet</span>';
+  const btn=document.getElementById('call-btn');
+  btn.disabled=!callQueue.length;
+  if(!callQueue.length)btn.textContent='All numbers called!';
+}
+
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+function initDemo(){
+  callQueue=[...allNumbers].sort(()=>Math.random()-.5);renderBoard();updateUI();
+  window.callNumber=function(){if(!callQueue.length)return;calledNums.push(callQueue.pop());renderBoard();updateUI();};
+  window.resetGame=function(){calledNums=[];callQueue=[...allNumbers].sort(()=>Math.random()-.5);renderBoard();updateUI();};
+  window.announceWinner=function(){const n=document.getElementById('winner-input').value.trim()||'Someone';showWinnerBanner(n);document.getElementById('winner-input').value='';};
+  window.dismissWinner=function(){document.getElementById('winner-banner').classList.remove('show');};
+  window.copyLink=function(){navigator.clipboard.writeText(location.origin+'/index.html?room=MHQ-DEMO');};
+  window.newRoom=function(){
+    localStorage.removeItem('myhq_bingo_room');
+    location.reload();
+  };
+}
+
+init();
+</script>
+</body>
+</html>
