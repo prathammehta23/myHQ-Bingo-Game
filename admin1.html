@@ -3,126 +3,150 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>myHQ Bingo — Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>myHQ Bingo — Diwali Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700&family=Yatra+One&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --brand: #1E22AA;
-  --coral: #FF7351;
-  --yellow: #FFB848;
-  --peach: #F4BEAA;
-  --mint: #96E6DC;
-  
-  --surface: #FFFFFF;
-  --border: #E2E8F0;
-  --text: #1E293B;
-  --muted: #64748B;
-  --mono: 'Roboto Mono', monospace;
-  --sans: 'Inter', sans-serif;
+  --night:#1A0B2E;--night-2:#2A0F3D;--maroon:#7A1035;
+  --marigold:#FF9F1C;--gold:#FFD166;--saffron:#FF6B35;--rani:#E0218A;
+  --surface:rgba(255,255,255,0.06);--border:rgba(255,209,102,0.22);
+  --text:#FFF6E5;--muted:#D9C3A5;--ink:#3A0E05;
+  --mono:'Roboto Mono',monospace;--sans:'Inter',sans-serif;--display:'Yatra One','Inter',serif;
 }
-
+html{background:var(--night)}
 body{
-  font-family:var(--sans);
-  background: linear-gradient(135deg, rgba(244,190,170,0.15) 0%, rgba(150,230,220,0.15) 100%);
+  font-family:var(--sans);color:var(--text);min-height:100vh;padding:36px 24px 24px;
+  background:
+    radial-gradient(circle at 10% 10%,rgba(255,159,28,.16) 0,transparent 35%),
+    radial-gradient(circle at 90% 20%,rgba(224,33,138,.14) 0,transparent 40%),
+    radial-gradient(circle at 50% 100%,rgba(255,183,3,.12) 0,transparent 45%),
+    linear-gradient(180deg,var(--night) 0%,var(--night-2) 60%,#3A0E2E 100%);
   background-attachment:fixed;
-  color:var(--text);
-  min-height:100vh;
-  padding:24px;
 }
+.toran{position:fixed;top:0;left:0;right:0;height:22px;z-index:5;pointer-events:none;
+  background:radial-gradient(circle at 12px 0,var(--marigold) 9px,transparent 10px) 0 0/24px 22px repeat-x,
+             radial-gradient(circle at 12px 0,#2E7D32 5px,transparent 6px) 12px 6px/48px 22px repeat-x;
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))}
 
 .wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto}
-.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid rgba(0,0,0,0.06)}
+.header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:24px;padding-bottom:18px;border-bottom:1px dashed var(--border)}
 .logo{display:flex;align-items:center;gap:12px}
-.logo-img{height:44px;width:auto;border-radius:6px;box-shadow:0 4px 10px rgba(0,0,0,0.08);} 
-.logo-title{font-size:22px;font-weight:800;letter-spacing:-0.5px;color:var(--brand)}
-.logo-sub{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-family:var(--mono);margin-top:2px;font-weight:700}
+.logo-img{height:44px;width:auto;border-radius:8px;box-shadow:0 0 0 2px var(--gold),0 4px 14px rgba(255,159,28,.35)}
+.logo-title{font-family:var(--display);font-size:26px;color:var(--gold);line-height:1}
+.logo-sub{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-family:var(--mono);margin-top:4px;font-weight:700}
 
-.live-pill{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:8px 18px;font-size:13px;font-family:var(--mono);font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.02)}
-.dot{width:8px;height:8px;border-radius:50%;background:#10B981;animation:pulse 2s infinite}
+.live-pill{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:8px 18px;font-size:13px;font-family:var(--mono);font-weight:600}
+.dot{width:8px;height:8px;border-radius:50%;background:#4ADE80;box-shadow:0 0 8px #4ADE80;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-.room-bar{background:#fff;border:1px solid rgba(255,115,81,0.3);border-radius:14px;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;box-shadow:0 4px 15px rgba(255,115,81,0.05)}
-.room-label{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-family:var(--mono);margin-bottom:6px;font-weight:700}
-.room-code{font-size:28px;font-weight:800;color:var(--coral);font-family:var(--mono);letter-spacing:6px}
-.room-actions{display:flex;gap:10px}
-.btn-ghost{background:#F8FAFC;border:1px solid #CBD5E1;color:var(--text);border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;font-family:var(--sans);cursor:pointer;transition:all .2s}
-.btn-ghost:hover{background:#F1F5F9;color:var(--coral);border-color:var(--coral)}
+.panel,.stat,.room-bar,.progress-wrap{background:var(--surface);border:1px solid var(--border);border-radius:16px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 8px 30px rgba(0,0,0,.3)}
 
-.winner-banner{display:none;background:linear-gradient(135deg, var(--coral), var(--yellow));border-radius:16px;padding:20px 24px;margin-bottom:20px;animation:pop .5s cubic-bezier(.175,.885,.32,1.275);box-shadow:0 6px 20px rgba(255,115,81,0.25)}
-.winner-banner.show{display:flex;align-items:center;justify-content:space-between}
-.winner-text{font-size:26px;font-weight:800;color:#fff;letter-spacing:-0.5px;text-shadow:0 1px 2px rgba(0,0,0,0.1)}
-.winner-sub{font-size:14px;color:rgba(255,255,255,.9);margin-top:4px;font-weight:600}
-.dismiss-btn{background:rgba(0,0,0,.2);border:none;color:#fff;border-radius:8px;padding:8px 14px;cursor:pointer;font-family:var(--sans);font-weight:600;transition:background .2s}
-.dismiss-btn:hover{background:rgba(0,0,0,.3)}
+.room-bar{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.room-label{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-family:var(--mono);margin-bottom:6px;font-weight:700}
+.room-code{font-size:30px;font-weight:800;color:var(--gold);font-family:var(--mono);letter-spacing:6px;text-shadow:0 0 14px rgba(255,209,102,.5)}
+.room-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn-ghost{background:rgba(0,0,0,.25);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;font-family:var(--sans);cursor:pointer;transition:all .2s}
+.btn-ghost:hover{color:var(--gold);border-color:var(--gold)}
+
+.winner-banner{display:none;background:linear-gradient(135deg,var(--maroon),var(--rani));border:1px solid var(--gold);border-radius:16px;padding:20px 24px;margin-bottom:20px;animation:pop .5s cubic-bezier(.175,.885,.32,1.275);box-shadow:0 6px 24px rgba(224,33,138,.35)}
+.winner-banner.show{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.winner-text{font-size:26px;font-weight:800;color:var(--gold)}
+.winner-sub{font-size:14px;color:rgba(255,246,229,.9);margin-top:4px;font-weight:600}
+.dismiss-btn{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:8px;padding:8px 14px;cursor:pointer;font-family:var(--sans);font-weight:600}
+.dismiss-btn:hover{background:rgba(0,0,0,.4)}
 @keyframes pop{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
 
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-.stat{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.03)}
-.stat-num{font-size:32px;font-weight:800;color:var(--coral);font-family:var(--mono)}
+.stat{padding:18px;text-align:center}
+.stat-num{font-size:32px;font-weight:800;color:var(--gold);font-family:var(--mono)}
 .stat-label{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:4px;font-weight:700}
 
 .main-grid{display:grid;grid-template-columns:1fr 300px;gap:16px;margin-bottom:16px}
-.panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,0.04)}
-.panel-label{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-family:var(--mono);margin-bottom:16px;font-weight:700}
+.panel{padding:20px}
+.panel-label{font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;font-family:var(--mono);margin-bottom:16px;font-weight:700}
 
 .bingo-board{display:grid;grid-template-columns:repeat(15,1fr);gap:5px}
-.board-header{text-align:center;font-weight:800;font-size:16px;padding:8px 2px;grid-column:span 3;color:var(--brand)}
-.num-btn{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:7px;font-size:14px;font-weight:600;font-family:var(--mono);background:#F1F5F9;color:#475569;border:1px solid #E2E8F0;cursor:pointer;transition:all .15s;user-select:none}
-.num-btn:hover{background:#E2E8F0;color:var(--text)}
-.num-btn.called{background:var(--coral);color:#fff;border-color:transparent;font-weight:700;box-shadow:0 2px 6px rgba(255,115,81,0.3)}
-.num-btn.last-called{box-shadow:0 0 0 4px var(--yellow);transform:scale(1.15);z-index:2;position:relative}
+.board-header{text-align:center;font-family:var(--display);font-size:20px;padding:4px 2px;grid-column:span 3;color:var(--ink);border-radius:8px}
+.board-header:nth-child(1){background:var(--saffron)}
+.board-header:nth-child(2){background:var(--marigold)}
+.board-header:nth-child(3){background:var(--gold)}
+.board-header:nth-child(4){background:#F472B6}
+.board-header:nth-child(5){background:var(--rani);color:#fff}
+.num-btn{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:14px;font-weight:600;font-family:var(--mono);background:rgba(255,246,229,.07);color:var(--muted);border:1px solid rgba(255,209,102,.15);user-select:none;transition:all .2s}
+.num-btn.called{background:radial-gradient(circle at 50% 60%,rgba(255,183,3,.95),rgba(255,107,53,.85) 70%);color:var(--ink);border-color:var(--gold);font-weight:800;box-shadow:0 0 10px rgba(255,183,3,.45)}
+.num-btn.last-called{box-shadow:0 0 0 3px var(--rani),0 0 18px rgba(224,33,138,.7);transform:scale(1.15);z-index:2;position:relative}
 
-.current-call{text-align:center;padding:24px 0 16px}
-.cur-letter{font-size:64px;font-weight:800;line-height:1;color:var(--coral);letter-spacing:-1px}
-.cur-number{font-size:72px;font-weight:800;line-height:1;font-family:var(--mono);color:var(--text)}
-.cur-hint{font-size:15px;color:var(--brand);margin-top:12px;font-family:var(--sans);font-weight:700;padding:0 10px;line-height:1.4}
+.current-call{text-align:center;padding:18px 0 12px}
+.cur-letter{font-family:var(--display);font-size:60px;line-height:1;color:var(--marigold)}
+.cur-number{font-size:72px;font-weight:800;line-height:1;font-family:var(--mono);color:var(--gold);text-shadow:0 0 22px rgba(255,209,102,.55)}
+.cur-hint{font-size:15px;color:var(--text);margin-top:12px;font-weight:700;padding:0 10px;line-height:1.4}
 
-.call-btn{width:100%;background:linear-gradient(135deg, var(--coral), var(--yellow));color:#fff;border:none;border-radius:12px;padding:16px;font-size:16px;font-weight:800;font-family:var(--sans);cursor:pointer;transition:all .2s;letter-spacing:.5px;margin-top:12px;box-shadow:0 4px 12px rgba(255,115,81,0.25); text-shadow:0 1px 2px rgba(0,0,0,0.1)}
-.call-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(255,115,81,0.35)}
+.call-btn{width:100%;background:linear-gradient(135deg,var(--saffron),var(--marigold) 50%,var(--gold));color:var(--ink);border:none;border-radius:12px;padding:16px;font-size:16px;font-weight:800;font-family:var(--sans);cursor:pointer;transition:all .2s;letter-spacing:.5px;margin-top:12px;box-shadow:0 6px 20px rgba(255,159,28,.4)}
+.call-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(255,159,28,.55)}
 .call-btn:active{transform:scale(.98)}
-.call-btn:disabled{background:#E2E8F0;color:#94A3B8;box-shadow:none;cursor:not-allowed;text-shadow:none;transform:none}
+.call-btn:disabled{background:rgba(255,255,255,.12);color:var(--muted);box-shadow:none;cursor:not-allowed;transform:none}
 
-.reset-btn{width:100%;background:#F8FAFC;color:#ef4444;border:1px solid #fecaca;border-radius:12px;padding:11px;font-size:13px;font-weight:600;font-family:var(--sans);cursor:pointer;transition:all .2s;margin-top:8px}
-.reset-btn:hover{background:#fef2f2}
+.reset-btn{width:100%;background:rgba(220,38,38,.12);color:#FCA5A5;border:1px solid rgba(248,113,113,.4);border-radius:12px;padding:11px;font-size:13px;font-weight:600;font-family:var(--sans);cursor:pointer;margin-top:8px}
+.reset-btn:hover{background:rgba(220,38,38,.22)}
 
 .recent-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.chip{background:#FFF4F1;border:1px solid rgba(255,115,81,0.2);color:var(--coral);border-radius:8px;padding:5px 11px;font-size:13px;font-weight:700;font-family:var(--mono)}
+.chip{background:rgba(255,209,102,.12);border:1px solid var(--border);color:var(--gold);border-radius:8px;padding:5px 11px;font-size:13px;font-weight:700;font-family:var(--mono)}
 
-.announce-input{width:100%;background:#F8FAFC;border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:var(--mono);font-size:13px;margin-bottom:8px;transition:border-color .2s}
-.announce-input:focus{outline:none;border-color:var(--coral);background:#fff}
+.announce-input{width:100%;background:rgba(0,0,0,.25);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:var(--mono);font-size:13px;margin-bottom:8px}
+.announce-input::placeholder{color:rgba(217,195,165,.5)}
+.announce-input:focus{outline:none;border-color:var(--marigold)}
 
-.progress-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:16px;box-shadow:0 4px 12px rgba(0,0,0,0.03)}
+.progress-wrap{padding:16px 20px;margin-bottom:16px}
 .progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.progress-bar-bg{background:#F1F5F9;border-radius:100px;height:8px}
-.progress-bar{height:100%;background:linear-gradient(90deg, var(--coral), var(--yellow));border-radius:100px;transition:width .5s ease}
+.progress-bar-bg{background:rgba(255,255,255,.08);border-radius:100px;height:8px}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--saffron),var(--gold));border-radius:100px;transition:width .5s ease;box-shadow:0 0 10px rgba(255,209,102,.5)}
 
-.scroll-panel{max-height:160px;overflow-y:auto;padding-right:4px;}
-.scroll-panel::-webkit-scrollbar {width: 4px;}
-.scroll-panel::-webkit-scrollbar-thumb {background: #CBD5E1; border-radius: 4px;}
-.claim-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+.scroll-panel{max-height:220px;overflow-y:auto;padding-right:4px}
+.scroll-panel::-webkit-scrollbar{width:4px}
+.scroll-panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.empty{font-size:12px;color:var(--muted);font-family:var(--mono)}
+.claim-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
 .claim-item:last-child{border-bottom:none}
-.claim-email{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:2px}
-
-.verify-btn{background:rgba(150,230,220,0.2);border:1px solid var(--mint);color:#0D9488;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;font-family:var(--sans);cursor:pointer;white-space:nowrap; transition:all 0.2s;}
-.verify-btn:hover{background:var(--mint); color:#042F2E;}
+.claim-type{color:var(--marigold);font-size:11px;font-weight:800;margin-left:4px}
+.claim-email{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:2px;word-break:break-all}
+.claim-time{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.verify-btn{background:rgba(255,209,102,.15);border:1px solid var(--gold);color:var(--gold);border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;font-family:var(--sans);cursor:pointer;white-space:nowrap}
+.verify-btn:hover{background:var(--gold);color:var(--ink)}
+.verify-btn.won{border-color:rgba(255,255,255,.2);color:var(--muted);background:none;cursor:default}
 
 .player-row{display:flex;align-items:center;padding:7px 0;border-bottom:1px solid var(--border)}
 .player-row:last-child{border-bottom:none}
-.player-dot{width:7px;height:7px;border-radius:50%;background:#10B981;margin-right:10px;flex-shrink:0}
+.player-dot{width:7px;height:7px;border-radius:50%;background:var(--marigold);box-shadow:0 0 6px var(--marigold);margin-right:10px;flex-shrink:0}
 .player-info-col{flex:1;min-width:0}
-.player-name-txt{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.player-name-txt{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .player-email-txt{font-size:11px;color:var(--muted);font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fb-status{font-size:11px;font-family:var(--mono);color:var(--muted);text-align:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);font-weight:600;}
+.fb-status{font-size:11px;font-family:var(--mono);color:var(--muted);text-align:center;margin-top:16px;padding-top:16px;border-top:1px dashed var(--border);font-weight:600}
+
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(26,11,46,.85);z-index:50;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modal-bg.show{display:flex}
+.modal{background:var(--night-2);border:1px solid var(--gold);border-radius:18px;padding:24px;max-width:420px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+.modal h3{font-family:var(--display);font-size:26px;margin-bottom:10px}
+.modal h3.ok{color:#86EFAC}.modal h3.bad{color:#FCA5A5}
+.modal p{font-size:14px;line-height:1.6;color:var(--text);margin-bottom:14px}
+.mini-card{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:16px}
+.mini-card div{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:6px;font-family:var(--mono);font-size:13px;font-weight:700;background:rgba(255,246,229,.07);color:var(--muted)}
+.mini-card .hit{background:var(--gold);color:var(--ink)}
+.mini-card .free{background:var(--rani);color:#fff;font-size:10px}
+.modal-actions{display:flex;gap:10px}
+.modal-actions button{flex:1;margin:0}
+
 @media(max-width:800px){.main-grid{grid-template-columns:1fr}.stats-row{grid-template-columns:repeat(2,1fr)}.bingo-board{grid-template-columns:repeat(5,1fr)}.board-header{grid-column:span 1}}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
+<div class="toran" aria-hidden="true"></div>
 <div class="wrap">
   <div class="header">
     <div class="logo">
       <img src="logo.jpg" alt="myHQ Logo" class="logo-img">
-      <div><div class="logo-title">Bingo</div><div class="logo-sub">Admin Dashboard</div></div>
+      <div><div class="logo-title">Bingo Bonanza 🪔</div><div class="logo-sub">Diwali Edition · Host Dashboard</div></div>
     </div>
     <div class="live-pill"><div class="dot"></div><span id="status-text">Initialising…</span></div>
   </div>
@@ -133,14 +157,14 @@ body{
       <div class="room-code" id="room-code-display">——</div>
     </div>
     <div class="room-actions">
-      <button class="btn-ghost" onclick="copyLink()">📋 Copy Player Link</button>
+      <button class="btn-ghost" id="copy-btn" onclick="copyLink()">📋 Copy Player Link</button>
       <button class="btn-ghost" onclick="newRoom()">+ New Room</button>
     </div>
   </div>
 
   <div class="winner-banner" id="winner-banner">
     <div>
-      <div class="winner-text">🎉 BINGO! <span id="winner-name-display"></span></div>
+      <div class="winner-text">🎆 <span id="winner-name-display"></span></div>
       <div class="winner-sub">Verify their card before confirming!</div>
     </div>
     <button class="dismiss-btn" onclick="dismissWinner()">Dismiss</button>
@@ -149,7 +173,7 @@ body{
   <div class="stats-row">
     <div class="stat"><div class="stat-num" id="s-called">0</div><div class="stat-label">Called</div></div>
     <div class="stat"><div class="stat-num" id="s-remain">75</div><div class="stat-label">Remaining</div></div>
-    <div class="stat"><div class="stat-num" id="s-players">0</div><div class="stat-label">Players Online</div></div>
+    <div class="stat"><div class="stat-num" id="s-players">0</div><div class="stat-label">Players Joined</div></div>
     <div class="stat"><div class="stat-num" id="s-claims">0</div><div class="stat-label">Bingo Claims</div></div>
   </div>
 
@@ -202,9 +226,18 @@ body{
   <div class="fb-status" id="fb-status">Connecting to Firebase…</div>
 </div>
 
+<div class="modal-bg" id="verify-modal">
+  <div class="modal">
+    <h3 id="vm-title">—</h3>
+    <p id="vm-msg"></p>
+    <div class="mini-card" id="vm-card"></div>
+    <div class="modal-actions" id="vm-actions"></div>
+  </div>
+</div>
+
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import{getDatabase,ref,set,get,onValue,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import{getDatabase,ref,set,get,update,onValue,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB59Bek7qL6ip2PMjW1JwhbbnGQg2cXP1Y",
@@ -297,11 +330,18 @@ const BINGO_HINTS = {
 
 const LETTERS=['B','I','N','G','O'];
 const RANGES={B:[1,15],I:[16,30],N:[31,45],G:[46,60],O:[61,75]};
-let db,roomId,calledNums=[],callQueue=[];
+let db,roomId,calledNums=[],callQueue=[],wonPrizes={},claimsById={},calling=false;
 const allNumbers=[];
 for(const[l,[min,max]]of Object.entries(RANGES))for(let i=min;i<=max;i++)allNumbers.push({letter:l,num:i});
 
 async function init(){
+  if(new URLSearchParams(location.search).get('demo')==='1'){
+    // Rehearsal mode: nothing touches the live database.
+    document.getElementById('fb-status').textContent='Demo mode — practice only, nothing is saved';
+    document.getElementById('room-code-display').textContent='MHQ-DEMO';
+    initDemo();
+    return;
+  }
   try{
     const app=initializeApp(firebaseConfig);
     db=getDatabase(app);
@@ -334,13 +374,20 @@ async function init(){
   }
 }
 
+// Fisher–Yates: sort(()=>Math.random()-.5) is noticeably biased for the call order.
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
 function genId(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return'MHQ-'+Array.from({length:3},()=>c[Math.floor(Math.random()*c.length)]).join('');}
 function parseCall(s){return{letter:s[0],num:parseInt(s.slice(1))};}
 
 async function loadOrCreate(){
   const snap=await get(ref(db,`rooms/${roomId}`));
   if(!snap.exists()){
-    callQueue=[...allNumbers].sort(()=>Math.random()-.5);
+    callQueue=shuffle(allNumbers);
     await set(ref(db,`rooms/${roomId}`),{status:'waiting',calledNumbers:[],callQueue:callQueue.map(c=>`${c.letter}${c.num}`),lastCall:null,createdAt:serverTimestamp()});
   }else{
     const d=snap.val();
@@ -351,14 +398,22 @@ async function loadOrCreate(){
 }
 
 function listenRoom(){
-  onValue(ref(db,`rooms/${roomId}`),snap=>{
-    if(!snap.exists())return;
-    const d=snap.val();
-    calledNums=(d.calledNumbers||[]).map(parseCall);
-    callQueue=(d.callQueue||[]).map(parseCall);
+  const toList=v=>!v?[]:(Array.isArray(v)?v:Object.values(v)).filter(Boolean);
+  onValue(ref(db,`rooms/${roomId}/calledNumbers`),snap=>{
+    calledNums=toList(snap.val()).map(parseCall);
     renderBoard();updateUI();
-    if(d.winner)showWinnerBanner(d.winner);
+  });
+  onValue(ref(db,`rooms/${roomId}/callQueue`),snap=>{
+    callQueue=toList(snap.val()).map(parseCall);
+    updateUI();
+  });
+  onValue(ref(db,`rooms/${roomId}/winner`),snap=>{
+    if(snap.val())showWinnerBanner(snap.val());
     else document.getElementById('winner-banner').classList.remove('show');
+  });
+  onValue(ref(db,`rooms/${roomId}/wonPrizes`),snap=>{
+    wonPrizes=snap.val()||{};
+    renderClaims();
   });
 }
 
@@ -366,7 +421,7 @@ function listenPlayers(){
   onValue(ref(db,`rooms/${roomId}/players`),snap=>{
     const list=document.getElementById('players-list');
     const countEl=document.getElementById('players-count');
-    if(!snap.exists()){list.innerHTML='<div style="font-size:12px;color:var(--muted);font-family:var(--mono)">No players yet</div>';countEl.textContent='0';document.getElementById('s-players').textContent='0';return;}
+    if(!snap.exists()){list.innerHTML='<div class="empty">No players yet</div>';countEl.textContent='0';document.getElementById('s-players').textContent='0';return;}
     const players=snap.val();
     const entries=Object.values(players).sort((a,b)=>(a.name||'').localeCompare(b.name||''));
     countEl.textContent=entries.length;
@@ -377,52 +432,85 @@ function listenPlayers(){
 
 function listenClaims(){
   onValue(ref(db,`rooms/${roomId}/claims`),snap=>{
-    const list=document.getElementById('claims-list');
-    const countEl=document.getElementById('claims-count');
-    if(!snap.exists()){list.innerHTML='<div style="font-size:12px;color:var(--muted);font-family:var(--mono)">No claims yet</div>';countEl.textContent='0';document.getElementById('s-claims').textContent='0';return;}
-    const claims=snap.val();
-    const entries=Object.entries(claims).sort((a,b)=>(b[1].ts||0)-(a[1].ts||0));
-    countEl.textContent=entries.length;document.getElementById('s-claims').textContent=entries.length;
-    
-    list.innerHTML=entries.map(([,c])=>`
-      <div class="claim-item">
-        <div>
-          <div style="font-weight:600; color:var(--text);">${esc(c.name)} <span style="color:var(--coral); font-size:11px; font-weight:800; margin-left:4px;">[${esc(c.type || 'BINGO')}]</span></div>
-          <div class="claim-email">${esc(c.email||'')}</div>
-          <div style="font-family:var(--mono);font-size:11px;color:var(--muted)">${new Date(c.ts).toLocaleTimeString()}</div>
-        </div>
-        <button class="verify-btn" onclick="window.verifyClaim('${c.emailKey}', '${esc(c.type || 'BINGO')}')">Verify</button>
-      </div>`).join('');
+    claimsById=snap.val()||{};
+    renderClaims();
+  });
+  document.getElementById('claims-list').addEventListener('click',e=>{
+    const btn=e.target.closest('.verify-btn[data-id]');
+    if(!btn)return;
+    const c=claimsById[btn.dataset.id];
+    if(c)window.verifyClaim(c.emailKey,c.type||'BINGO');
   });
 }
 
+function renderClaims(){
+  const list=document.getElementById('claims-list');
+  const entries=Object.entries(claimsById).sort((a,b)=>(b[1].ts||0)-(a[1].ts||0));
+  document.getElementById('claims-count').textContent=entries.length;
+  document.getElementById('s-claims').textContent=entries.length;
+  if(!entries.length){list.innerHTML='<div class="empty">No claims yet</div>';return;}
+  list.innerHTML=entries.map(([id,c])=>{
+    const owner=wonPrizes[c.type];
+    const btn=owner
+      ?`<button class="verify-btn won" disabled title="Won by ${esc(owner)}">Won</button>`
+      :`<button class="verify-btn" data-id="${esc(id)}">Verify</button>`;
+    return `
+      <div class="claim-item">
+        <div>
+          <div style="font-weight:600">${esc(c.name)} <span class="claim-type">[${esc(c.type||'BINGO')}]</span></div>
+          <div class="claim-email">${esc(c.email||'')}</div>
+          <div class="claim-time">${c.ts?new Date(c.ts).toLocaleTimeString():''}</div>
+        </div>
+        ${btn}
+      </div>`;
+  }).join('');
+}
+
+function showModal(title,ok,msg,cardHtml,actions){
+  const t=document.getElementById('vm-title');
+  t.textContent=title;t.className=ok?'ok':'bad';
+  document.getElementById('vm-msg').textContent=msg;
+  document.getElementById('vm-card').innerHTML=cardHtml||'';
+  const box=document.getElementById('vm-actions');box.innerHTML='';
+  actions.forEach(([label,cls,fn])=>{
+    const b=document.createElement('button');b.className=cls;b.textContent=label;
+    b.onclick=async()=>{b.disabled=true;try{await fn();}finally{closeModal();}};
+    box.appendChild(b);
+  });
+  document.getElementById('verify-modal').classList.add('show');
+}
+function closeModal(){document.getElementById('verify-modal').classList.remove('show');}
+
 window.verifyClaim = async function(emailKey, claimType) {
   try {
+     if (wonPrizes[claimType]) {
+       showModal('Already won',false,`${claimType} was already won by ${wonPrizes[claimType]}.`,'',[['Close','reset-btn',async()=>{}]]);
+       return;
+     }
      const snap = await get(ref(db, `rooms/${roomId}/players/${emailKey}`));
-     if(!snap.exists()){ alert("Error: Player data not found!"); return; }
-     
+     if(!snap.exists()||!snap.val().card){
+       showModal('Player not found',false,"This player's card is missing — they may have joined before the last reset.",'',[['Close','reset-btn',async()=>{}]]);
+       return;
+     }
+
      const player = snap.val();
-     const card = player.card;
+     const card = Array.isArray(player.card)?player.card:Object.values(player.card);
      const calledSet = new Set(calledNums.map(c => `${c.letter}${c.num}`));
 
      function isVerified(col, row) {
        const idx = col * 5 + row;
        if (idx === 12) return true; // FREE
-       const num = card[idx];
-       const letter = LETTERS[col];
-       return calledSet.has(`${letter}${num}`);
+       return calledSet.has(`${LETTERS[col]}${card[idx]}`);
      }
 
      let lines = 0;
      let matchedCells = 0;
-     let fourCorners = isVerified(0,0) && isVerified(0,4) && isVerified(4,0) && isVerified(4,4);
-     
+     const fourCorners = isVerified(0,0) && isVerified(0,4) && isVerified(4,0) && isVerified(4,4);
+
      for(let r=0;r<5;r++) if([0,1,2,3,4].every(c=>isVerified(c,r))) lines++;
      for(let c=0;c<5;c++) if([0,1,2,3,4].every(r=>isVerified(c,r))) lines++;
-     
      if([0,1,2,3,4].every(i=>isVerified(i,i))) lines++;
      if([0,1,2,3,4].every(i=>isVerified(i,4-i))) lines++;
-     
      for(let c=0;c<5;c++) for(let r=0;r<5;r++) if(isVerified(c,r)) matchedCells++;
 
      let isValid = false;
@@ -431,35 +519,63 @@ window.verifyClaim = async function(emailKey, claimType) {
      if (claimType === 'Four Corners' && fourCorners) isValid = true;
      if (claimType === 'Jackpot Jashn' && matchedCells === 25) isValid = true;
 
-     if (isValid) {
-       if(confirm(`✅ LEGITIMATE CLAIM!\n\n${player.name} successfully achieved ${claimType}.\n\nDo you want to confirm them as the winner and lock this prize so no one else can claim it?`)) {
-           await set(ref(db, `rooms/${roomId}/wonPrizes/${claimType}`), player.name);
-           await set(ref(db, `rooms/${roomId}/winner`), `${player.name} won ${claimType}!`);
-           document.getElementById('winner-input').value = '';
-       }
-     } else {
-       alert(`❌ INVALID CLAIM!\n\n${player.name} tried to claim ${claimType}, but they don't actually have the required matching numbers based on what has been called.`);
+     // Card laid out as players see it (B-I-N-G-O across the top), called numbers highlighted.
+     let cardHtml='';
+     for(let r=0;r<5;r++) for(let c=0;c<5;c++){
+       const idx=c*5+r;
+       if(idx===12){cardHtml+='<div class="free">FREE</div>';continue;}
+       cardHtml+=`<div class="${isVerified(c,r)?'hit':''}">${esc(card[idx])}</div>`;
      }
 
+     if (isValid) {
+       showModal('✅ Legitimate claim',true,
+         `${player.name} achieved ${claimType}. Confirm them as the winner and lock this prize?`,cardHtml,[
+         ['Confirm winner','call-btn',async()=>{
+           await update(ref(db,`rooms/${roomId}`),{
+             [`wonPrizes/${claimType}`]:player.name,
+             winner:`${player.name} won ${claimType}!`
+           });
+         }],
+         ['Cancel','reset-btn',async()=>{}]
+       ]);
+     } else {
+       showModal('❌ Invalid claim',false,
+         `${player.name} claimed ${claimType}, but their card doesn't have it with the numbers called so far.`,cardHtml,
+         [['Close','reset-btn',async()=>{}]]);
+     }
   } catch(e) {
      console.error(e);
-     alert("There was an error trying to verify this claim.");
+     showModal('Error',false,'Could not verify this claim. Check your connection and try again.','',[['Close','reset-btn',async()=>{}]]);
   }
 };
 
 window.callNumber=async function(){
-  if(!callQueue.length)return;
-  const pick=callQueue[callQueue.length-1],nq=callQueue.slice(0,-1),nc=[...calledNums,pick];
-  await set(ref(db,`rooms/${roomId}/calledNumbers`),nc.map(c=>`${c.letter}${c.num}`));
-  await set(ref(db,`rooms/${roomId}/callQueue`),nq.map(c=>`${c.letter}${c.num}`));
-  await set(ref(db,`rooms/${roomId}/lastCall`),`${pick.letter}${pick.num}`);
-  await set(ref(db,`rooms/${roomId}/status`),'playing');
+  if(calling||!callQueue.length)return;
+  calling=true;
+  document.getElementById('call-btn').disabled=true;
+  try{
+    const pick=callQueue[callQueue.length-1],nq=callQueue.slice(0,-1),nc=[...calledNums,pick];
+    // One atomic write so players never see a half-applied call.
+    await update(ref(db,`rooms/${roomId}`),{
+      calledNumbers:nc.map(c=>`${c.letter}${c.num}`),
+      callQueue:nq.map(c=>`${c.letter}${c.num}`),
+      lastCall:`${pick.letter}${pick.num}`,
+      status:'playing'
+    });
+  }catch(e){
+    console.error(e);
+    document.getElementById('fb-status').textContent='⚠ Call failed — check connection and press again';
+  }finally{
+    calling=false;
+    updateUI();
+  }
 };
 
 window.resetGame=async function(){
   if(!confirm('Reset the game? All progress will be lost.'))return;
-  const fq=[...allNumbers].sort(()=>Math.random()-.5);
-  await set(ref(db,`rooms/${roomId}`),{status:'waiting',calledNumbers:[],winner:null,claims:null,wonPrizes:null,callQueue:fq.map(c=>`${c.letter}${c.num}`),lastCall:null});
+  const fq=shuffle(allNumbers);
+  // Clears players too: their pages notice and deal themselves a fresh card automatically.
+  await set(ref(db,`rooms/${roomId}`),{status:'waiting',calledNumbers:[],winner:null,claims:null,wonPrizes:null,callQueue:fq.map(c=>`${c.letter}${c.num}`),lastCall:null,createdAt:serverTimestamp()});
 };
 
 window.announceWinner=async function(){
@@ -474,9 +590,10 @@ window.dismissWinner=async function(){
 };
 
 window.copyLink=function(){
-  const url=location.href.replace(/admin.*\.html/,'index.html');
+  // Build from scratch: the old regex missed clean URLs like /admin1 and copied the ADMIN link.
+  const url=new URL(`index.html?room=${encodeURIComponent(roomId)}`,location.href).href;
   navigator.clipboard.writeText(url).then(()=>{
-    const b=document.querySelector('.btn-ghost');b.textContent='✓ Copied!';
+    const b=document.getElementById('copy-btn');b.textContent='✓ Copied!';
     setTimeout(()=>{b.textContent='📋 Copy Player Link';},2000);
   });
 };
@@ -528,18 +645,18 @@ function updateUI(){
   }
 
   const last5=calledNums.slice(-5).reverse();
-  document.getElementById('recent-chips').innerHTML=last5.length?last5.map(c=>`<div class="chip">${c.letter}${c.num}</div>`).join(''):'<span style="font-size:12px;color:var(--muted);font-family:var(--mono)">None yet</span>';
+  document.getElementById('recent-chips').innerHTML=last5.length?last5.map(c=>`<div class="chip">${c.letter} · ${c.num}</div>`).join(''):'<span style="font-size:12px;color:var(--muted);font-family:var(--mono)">None yet</span>';
   const btn=document.getElementById('call-btn');
-  btn.disabled=!callQueue.length;
-  if(!callQueue.length)btn.textContent='All numbers called!';
+  btn.disabled=calling||!callQueue.length;
+  btn.textContent=callQueue.length?'Call Next Number 🪔':'All numbers called!';
 }
 
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
 function initDemo(){
-  callQueue=[...allNumbers].sort(()=>Math.random()-.5);renderBoard();updateUI();
+  callQueue=shuffle(allNumbers);renderBoard();updateUI();
   window.callNumber=function(){if(!callQueue.length)return;calledNums.push(callQueue.pop());renderBoard();updateUI();};
-  window.resetGame=function(){calledNums=[];callQueue=[...allNumbers].sort(()=>Math.random()-.5);renderBoard();updateUI();};
+  window.resetGame=function(){calledNums=[];callQueue=shuffle(allNumbers);renderBoard();updateUI();};
   window.announceWinner=function(){const n=document.getElementById('winner-input').value.trim()||'Someone';showWinnerBanner(n);document.getElementById('winner-input').value='';};
   window.dismissWinner=function(){document.getElementById('winner-banner').classList.remove('show');};
   window.copyLink=function(){navigator.clipboard.writeText(location.origin+'/index.html?room=MHQ-DEMO');};

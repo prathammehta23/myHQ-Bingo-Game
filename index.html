@@ -2,174 +2,219 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>myHQ Bingo — Play</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>myHQ Bingo — Diwali Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700&family=Yatra+One&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --brand: #1E22AA;
-  --coral: #FF7351;
-  --yellow: #FFB848;
-  --peach: #F4BEAA;
-  --mint: #96E6DC;
-  
-  --surface: #FFFFFF;
-  --border: #E2E8F0;
-  --text: #1E293B;
-  --muted: #64748B;
+  --night: #1A0B2E;
+  --night-2: #2A0F3D;
+  --maroon: #7A1035;
+  --marigold: #FF9F1C;
+  --gold: #FFD166;
+  --saffron: #FF6B35;
+  --rani: #E0218A;
+  --diya: #FFB703;
+
+  --surface: rgba(255,255,255,0.06);
+  --surface-solid: #2B1240;
+  --border: rgba(255,209,102,0.22);
+  --text: #FFF6E5;
+  --muted: #D9C3A5;
   --mono: 'Roboto Mono', monospace;
   --sans: 'Inter', sans-serif;
+  --display: 'Yatra One', 'Inter', serif;
 }
 
+html{background:var(--night)}
 body{
   font-family:var(--sans);
-  background: linear-gradient(135deg, rgba(244,190,170,0.2) 0%, rgba(150,230,220,0.2) 100%);
+  background:
+    radial-gradient(circle at 15% 10%, rgba(255,159,28,0.18) 0, transparent 35%),
+    radial-gradient(circle at 85% 30%, rgba(224,33,138,0.15) 0, transparent 40%),
+    radial-gradient(circle at 50% 100%, rgba(255,183,3,0.15) 0, transparent 45%),
+    linear-gradient(180deg, var(--night) 0%, var(--night-2) 60%, #3A0E2E 100%);
   background-attachment:fixed;
   color:var(--text);
   min-height:100vh;
   padding:20px 16px 40px;
-  max-width:480px;
-  margin:0 auto;
 }
 
-.wrap{position:relative;z-index:1}
-.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
-.logo{display:flex;align-items:center;gap:10px}
-.logo-img{height:42px;width:auto;border-radius:6px;box-shadow:0 4px 10px rgba(0,0,0,0.06);} 
-.logo-title{font-size:18px;font-weight:800;letter-spacing:-0.5px;color:var(--brand)}
-.logo-sub{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-family:var(--mono);font-weight:700;}
+/* Floating sparkles / diya glow */
+.sky{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.spark{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px 3px rgba(255,209,102,.7);opacity:.0;animation:twinkle 4s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(.6)}50%{opacity:.9;transform:scale(1)}}
+.toran{position:fixed;top:0;left:0;right:0;height:22px;z-index:2;pointer-events:none;
+  background:
+    radial-gradient(circle at 12px 0, var(--marigold) 9px, transparent 10px) 0 0/24px 22px repeat-x,
+    radial-gradient(circle at 12px 0, #2E7D32 5px, transparent 6px) 12px 6px/48px 22px repeat-x;
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))}
 
-.join-hero{text-align:center;padding:28px 0 24px}
-.join-emoji{font-size:52px;display:block;margin-bottom:14px}
-.join-title{font-size:28px;font-weight:800;margin-bottom:8px;letter-spacing:-1px;color:var(--brand)}
+.wrap{position:relative;z-index:1;max-width:480px;margin:0 auto;padding-top:10px}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-img{height:42px;width:auto;border-radius:8px;box-shadow:0 0 0 2px var(--gold),0 4px 14px rgba(255,159,28,.35)}
+.logo-title{font-family:var(--display);font-size:22px;color:var(--gold);line-height:1}
+.logo-sub{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-family:var(--mono);font-weight:700;margin-top:3px}
+
+.join-hero{text-align:center;padding:24px 0 16px}
+.join-emoji{font-size:56px;display:block;margin-bottom:10px;filter:drop-shadow(0 0 18px rgba(255,183,3,.8));animation:flicker 2.4s ease-in-out infinite}
+@keyframes flicker{0%,100%{filter:drop-shadow(0 0 14px rgba(255,183,3,.6))}50%{filter:drop-shadow(0 0 26px rgba(255,183,3,1))}}
+.join-title{font-family:var(--display);font-size:34px;margin-bottom:6px;color:var(--gold);text-shadow:0 2px 0 var(--maroon)}
+.join-tag{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--marigold);font-weight:700;margin-bottom:10px}
 .join-sub{font-size:14px;color:var(--muted);line-height:1.65}
-.join-form{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:24px;margin-top:24px;box-shadow:0 4px 20px rgba(0,0,0,0.05)}
+
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:20px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 8px 30px rgba(0,0,0,.35)}
+.join-form{padding:24px;margin-top:20px;position:relative}
+.join-form::before{content:'';position:absolute;inset:-1px;border-radius:20px;padding:1px;background:linear-gradient(135deg,var(--gold),transparent 40%,transparent 60%,var(--rani));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
 .field{margin-bottom:16px}
-.field-label{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-family:var(--mono);margin-bottom:8px;display:block;font-weight:700}
-.field-input{width:100%;background:#F8FAFC;border:1px solid var(--border);border-radius:12px;padding:13px 15px;color:var(--text);font-family:var(--sans);font-size:15px;transition:all .2s}
-.field-input::placeholder{color:#94A3B8}
-.field-input:focus{outline:none;border-color:var(--coral);background:#fff;box-shadow:0 0 0 3px rgba(255,115,81,0.15)}
+.field-label{font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;font-family:var(--mono);margin-bottom:8px;display:block;font-weight:700}
+.field-input{width:100%;background:rgba(0,0,0,.25);border:1px solid var(--border);border-radius:12px;padding:13px 15px;color:var(--text);font-family:var(--sans);font-size:16px;transition:all .2s}
+.field-input::placeholder{color:rgba(217,195,165,.5)}
+.field-input:focus{outline:none;border-color:var(--marigold);box-shadow:0 0 0 3px rgba(255,159,28,.25)}
 .code-input{font-family:var(--mono);font-size:22px;font-weight:700;letter-spacing:6px;text-align:center;text-transform:uppercase}
-.join-btn{width:100%;background:linear-gradient(135deg, var(--coral), var(--yellow));color:#fff;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:800;font-family:var(--sans);cursor:pointer;transition:all .2s;margin-top:4px;box-shadow:0 4px 12px rgba(255,115,81,0.25); text-shadow:0 1px 2px rgba(0,0,0,0.1)}
-.join-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(255,115,81,0.35)}
+.join-btn{width:100%;background:linear-gradient(135deg,var(--saffron),var(--marigold) 50%,var(--gold));color:#3A0E05;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:800;font-family:var(--sans);cursor:pointer;transition:all .2s;margin-top:4px;box-shadow:0 6px 20px rgba(255,159,28,.4)}
+.join-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(255,159,28,.55)}
 .join-btn:active{transform:scale(.98)}
-.join-btn:disabled{background:#E2E8F0;color:#94A3B8;box-shadow:none;cursor:not-allowed;text-shadow:none;transform:none}
-.error-msg{color:#ef4444;font-size:13px;font-family:var(--mono);text-align:center;margin-top:12px;display:none;padding:10px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca}
+.join-btn:disabled{background:rgba(255,255,255,.12);color:var(--muted);box-shadow:none;cursor:not-allowed;transform:none}
+.error-msg{color:#FFD7D7;font-size:13px;font-family:var(--mono);text-align:center;margin-top:12px;display:none;padding:10px;background:rgba(220,38,38,.18);border-radius:8px;border:1px solid rgba(248,113,113,.4)}
 
 #game-screen{display:none}
-.player-bar{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,0.03)}
-.player-name-show{font-weight:700;font-size:15px;color:var(--brand)}
-.player-email-show{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:2px}
-.room-badge{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--coral);background:#FFF4F1;border:1px solid rgba(255,115,81,0.2);border-radius:100px;padding:4px 12px; display:inline-block; margin-bottom: 4px;}
+.player-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;margin-bottom:14px;border-radius:14px}
+.player-name-show{font-weight:700;font-size:15px;color:var(--gold)}
+.player-email-show{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:2px;word-break:break-all}
+.room-badge{font-family:var(--mono);font-size:12px;font-weight:700;color:#3A0E05;background:var(--gold);border-radius:100px;padding:4px 12px;display:inline-block;margin-bottom:4px}
+.leave-btn{background:none;border:none;color:var(--marigold);font-family:var(--mono);font-size:10px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:1px;padding:4px 0}
 
-.call-ticker{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;box-shadow:0 4px 12px rgba(0,0,0,0.03)}
+.demo-badge{display:none;text-align:center;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1px;color:#3A0E05;background:var(--marigold);border-radius:10px;padding:8px;margin-bottom:14px}
+
+.call-ticker{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;border-radius:16px}
 .ticker-label{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-family:var(--mono);margin-bottom:5px;font-weight:700}
-.ticker-val{font-size:26px;font-weight:800;color:var(--coral);font-family:var(--mono)}
-.ticker-right{text-align:right;font-size:12px;color:var(--muted);font-family:var(--mono);line-height:1.7;font-weight:500;}
+.ticker-val{transform-origin:left center;font-size:28px;font-weight:800;color:var(--gold);font-family:var(--mono);text-shadow:0 0 14px rgba(255,209,102,.55)}
+.ticker-val.flash{animation:flash .8s ease-out}
+@keyframes flash{0%{transform:scale(1.15);color:#fff}100%{transform:scale(1)}}
+.ticker-right{text-align:right;font-size:12px;color:var(--muted);font-family:var(--mono);line-height:1.7;font-weight:500}
 
-.card-wrap{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:0 4px 20px rgba(0,0,0,0.04)}
-.card-header-row{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:8px}
-.col-lbl{text-align:center;font-size:22px;font-weight:800;padding:10px 0;color:var(--brand)}
+.card-wrap{padding:16px;margin-bottom:14px;position:relative}
+.card-header-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px}
+.col-lbl{text-align:center;font-family:var(--display);font-size:26px;padding:6px 0;color:#3A0E05;border-radius:10px;line-height:1.2}
+.col-lbl:nth-child(1){background:var(--saffron)}
+.col-lbl:nth-child(2){background:var(--marigold)}
+.col-lbl:nth-child(3){background:var(--gold)}
+.col-lbl:nth-child(4){background:#F472B6}
+.col-lbl:nth-child(5){background:var(--rani);color:#fff}
 .card-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 
-.card-cell{position:relative;aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:10px;font-size:18px;font-weight:700;font-family:var(--mono);cursor:pointer;transition:transform .1s, box-shadow .1s;background:#FFFFFF;color:var(--text);border:2px solid #E2E8F0;user-select:none;box-shadow:0 3px 0 #E2E8F0}
-.card-cell:active{transform:translateY(3px);box-shadow:0 0 0 #E2E8F0}
-.card-cell.free{background:rgba(150,230,220,0.25);border-color:var(--mint);color:#0D9488;font-size:12px;cursor:default;box-shadow:0 3px 0 var(--mint)}
+.card-cell{position:relative;aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:12px;font-size:18px;font-weight:700;font-family:var(--mono);cursor:pointer;transition:transform .1s,box-shadow .2s,background .2s;background:rgba(255,246,229,.08);color:var(--text);border:1.5px solid rgba(255,209,102,.25);user-select:none;-webkit-tap-highlight-color:transparent}
+.card-cell:active{transform:scale(.94)}
+.card-cell.marked{background:radial-gradient(circle at 50% 60%, rgba(255,183,3,.95), rgba(255,107,53,.85) 70%);color:#3A0E05;border-color:var(--gold);box-shadow:0 0 16px rgba(255,183,3,.6)}
+.card-cell.marked::after{content:'🪔';position:absolute;font-size:11px;bottom:2px;right:3px;line-height:1}
+.card-cell.free{background:linear-gradient(135deg,var(--rani),var(--maroon));color:var(--gold);font-size:11px;letter-spacing:1px;cursor:default;border-color:var(--rani);box-shadow:0 0 14px rgba(224,33,138,.5);flex-direction:column;gap:1px}
+.card-cell.free::after{content:none}
+.card-cell.free .free-ic{font-size:18px;line-height:1}
 
-.card-cell.marked::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top right, transparent calc(50% - 2.5px), var(--coral) calc(50% - 1.5px), var(--coral) calc(50% + 1.5px), transparent calc(50% + 2.5px));
-  border-radius: 8px;
-  pointer-events: none;
-}
-
-.card-info{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);font-family:var(--mono);font-weight:600}
-.legend{display:flex;gap:12px;flex-wrap:wrap}
+.card-info{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px dashed var(--border);font-size:12px;color:var(--muted);font-family:var(--mono);font-weight:600}
 .legend-item{display:flex;align-items:center;gap:6px}
-.legend-strike{width:16px;height:2.5px;background:var(--coral);transform:rotate(-45deg)}
+.legend-dot{width:14px;height:14px;border-radius:4px;background:radial-gradient(circle,var(--diya),var(--saffron))}
 
-.claim-container{display:none;flex-direction:column;gap:10px;margin-bottom:14px;}
-.bingo-btn{width:100%;color:#fff;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:800;font-family:var(--sans);cursor:pointer;animation:pop .4s cubic-bezier(.175,.885,.32,1.275);transition:all 0.1s;box-shadow:0 4px 12px rgba(0,0,0,0.15)}
-.bingo-btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.2)}
-.bingo-btn:active{transform:translateY(0);box-shadow:0 2px 6px rgba(0,0,0,0.15)}
-.btn-qs { background:var(--coral); text-shadow:0 1px 2px rgba(0,0,0,0.1);} 
-.btn-dd { background:var(--yellow); color:#000;} 
-.btn-fc { background:var(--mint); color:#042F2E;} /* Replaced btn-tt with btn-fc */
-.btn-jj { background:linear-gradient(135deg, var(--coral), var(--brand)); color:#fff; font-size:18px; letter-spacing:1px; padding:20px; text-shadow:0 1px 2px rgba(0,0,0,0.2);} 
+.claim-container{display:none;flex-direction:column;gap:10px;margin-bottom:14px}
+.bingo-btn{width:100%;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:800;font-family:var(--sans);cursor:pointer;animation:pop .4s cubic-bezier(.175,.885,.32,1.275),glow 1.6s ease-in-out infinite;transition:transform .1s}
+.bingo-btn:hover{transform:translateY(-2px)}
+.bingo-btn:disabled{animation:none;opacity:.75;cursor:default;transform:none}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(255,209,102,.6)}50%{box-shadow:0 0 22px 4px rgba(255,209,102,.75)}}
+.btn-qs{background:linear-gradient(135deg,var(--saffron),var(--marigold));color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.btn-dd{background:linear-gradient(135deg,var(--marigold),var(--gold));color:#3A0E05}
+.btn-fc{background:linear-gradient(135deg,#F472B6,var(--rani));color:#fff}
+.btn-jj{background:linear-gradient(135deg,var(--gold),var(--saffron) 50%,var(--rani));color:#fff;font-size:18px;letter-spacing:1px;padding:20px;text-shadow:0 1px 3px rgba(0,0,0,.35)}
 @keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
 
-.broadcast-banner{display:none;background:linear-gradient(135deg, var(--coral), var(--yellow));border-radius:14px;padding:16px 20px;text-align:center;margin-bottom:14px;animation:pop .4s cubic-bezier(.175,.885,.32,1.275);box-shadow:0 4px 15px rgba(255,115,81,0.25)}
+.broadcast-banner{display:none;background:linear-gradient(135deg,var(--maroon),var(--rani));border:1px solid var(--gold);border-radius:14px;padding:16px 20px;text-align:center;margin-bottom:14px;animation:pop .4s cubic-bezier(.175,.885,.32,1.275);box-shadow:0 6px 24px rgba(224,33,138,.35)}
 .broadcast-banner.show{display:block}
-.bc-title{font-size:20px;font-weight:800;color:#fff;letter-spacing:-0.5px;text-shadow:0 1px 2px rgba(0,0,0,0.1)}
-.bc-sub{font-size:13px;color:rgba(255,255,255,.9);margin-top:4px;font-weight:600}
+.bc-title{font-size:20px;font-weight:800;color:var(--gold);letter-spacing:-.3px}
+.bc-sub{font-size:13px;color:rgba(255,246,229,.9);margin-top:4px;font-weight:600}
 
-.win-overlay{display:none;position:fixed;inset:0;background:rgba(255,255,255,.95);z-index:100;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px;backdrop-filter:blur(5px)}
+.win-overlay{display:none;position:fixed;inset:0;background:rgba(26,11,46,.94);z-index:100;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px;backdrop-filter:blur(5px)}
 .win-overlay.show{display:flex}
-.win-emoji{font-size:72px;animation:bounce .7s infinite alternate}
+.win-emoji{font-size:76px;animation:bounce .7s infinite alternate}
 @keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-14px)}}
-.win-title{font-size:38px;font-weight:800;margin:12px 0 8px;color:var(--coral);letter-spacing:-1px}
-.win-msg{font-size:16px;color:var(--text);line-height:1.6;font-weight:600}
-.win-close{margin-top:28px;background:var(--brand);border:none;color:#fff;border-radius:12px;padding:14px 32px;font-size:15px;font-weight:700;font-family:var(--sans);cursor:pointer;box-shadow:0 4px 12px rgba(30,34,170,0.25)}
+.win-title{font-family:var(--display);font-size:40px;margin:12px 0 8px;color:var(--gold);text-shadow:0 0 20px rgba(255,209,102,.6)}
+.win-msg{font-size:16px;color:var(--text);line-height:1.6;font-weight:600;max-width:360px}
+.win-steps{margin-top:16px;font-family:var(--mono);font-size:12px;color:var(--marigold);letter-spacing:1px}
+.win-close{margin-top:24px;background:linear-gradient(135deg,var(--marigold),var(--gold));border:none;color:#3A0E05;border-radius:12px;padding:14px 32px;font-size:15px;font-weight:800;font-family:var(--sans);cursor:pointer;box-shadow:0 6px 20px rgba(255,159,28,.4)}
+.firework{position:absolute;width:6px;height:6px;border-radius:50%;pointer-events:none;animation:burst 1.1s ease-out forwards}
+@keyframes burst{0%{transform:translate(0,0);opacity:1}100%{transform:translate(var(--dx),var(--dy));opacity:0}}
 
-.conn-status{font-size:11px;color:var(--muted);font-family:var(--mono);font-weight:600}
+.conn-status{font-size:11px;color:var(--muted);font-family:var(--mono);font-weight:600;display:flex;align-items:center;gap:6px}
+.conn-dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.conn-status.live .conn-dot{background:#4ADE80;box-shadow:0 0 8px #4ADE80}
+.conn-status.off .conn-dot{background:#F87171}
+
+.footer{text-align:center;margin-top:22px;font-size:12px;color:var(--muted);font-family:var(--mono)}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
 </style>
 </head>
 <body>
+<div class="toran" aria-hidden="true"></div>
+<div class="sky" id="sky" aria-hidden="true"></div>
+
 <div class="wrap">
   <div class="header">
     <div class="logo">
       <img src="logo.jpg" alt="myHQ Logo" class="logo-img">
-      <div><div class="logo-title">Bingo</div><div class="logo-sub">Player</div></div>
+      <div><div class="logo-title">Bingo Bonanza</div><div class="logo-sub">Diwali Edition</div></div>
     </div>
-    <div class="conn-status" id="conn-status">—</div>
+    <div class="conn-status" id="conn-status"><span class="conn-dot"></span><span id="conn-text">—</span></div>
   </div>
 
   <div id="join-screen">
     <div class="join-hero">
-      <span class="join-emoji">🎱</span>
+      <span class="join-emoji">🪔</span>
+      <div class="join-tag">✦ Shubh Deepavali ✦</div>
       <div class="join-title">Join the Game</div>
-      <div class="join-sub">Enter your details and room code to get your unique Bingo card.</div>
+      <div class="join-sub">Enter your details and the room code to light up your unique Bingo card.</div>
     </div>
-    <div class="join-form">
+    <div class="join-form panel">
       <div class="field">
-        <label class="field-label">Your Name</label>
-        <input class="field-input" id="p-name" placeholder="e.g. Priya Sharma">
+        <label class="field-label" for="p-name">Your Name</label>
+        <input class="field-input" id="p-name" placeholder="e.g. Priya Sharma" autocomplete="name">
       </div>
       <div class="field">
-        <label class="field-label">Company Email</label>
-        <input class="field-input" id="p-email" type="email" placeholder="priya.sharma@myhq.in">
+        <label class="field-label" for="p-email">Company Email</label>
+        <input class="field-input" id="p-email" type="email" placeholder="priya.sharma@myhq.in" autocomplete="email">
       </div>
       <div class="field">
-        <label class="field-label">Room Code</label>
-        <input class="field-input code-input" id="p-room" placeholder="MHQ-XXX" maxlength="7">
+        <label class="field-label" for="p-room">Room Code</label>
+        <input class="field-input code-input" id="p-room" placeholder="MHQ-XXX" maxlength="7" autocomplete="off">
       </div>
-      <button class="join-btn" id="join-btn" onclick="joinGame()">Get My Card →</button>
+      <button class="join-btn" id="join-btn" onclick="joinGame()">Get My Card 🪔</button>
       <div class="error-msg" id="join-error"></div>
     </div>
   </div>
 
   <div id="game-screen">
-    <div class="player-bar">
+    <div class="demo-badge" id="demo-badge">DEMO MODE — practice only, nothing is sent to the hosts</div>
+
+    <div class="player-bar panel">
       <div>
         <div class="player-name-show" id="show-name">—</div>
         <div class="player-email-show" id="show-email">—</div>
       </div>
-      <div style="text-align: right;">
-        <div class="room-badge" id="show-room">—</div>
-        <br>
-        <button onclick="leaveGame()" style="background:none; border:none; color:var(--coral); font-family:var(--mono); font-size:10px; font-weight:700; cursor:pointer; text-transform:uppercase; letter-spacing:1px;">Leave Room</button>
+      <div style="text-align:right">
+        <div class="room-badge" id="show-room">—</div><br>
+        <button class="leave-btn" onclick="leaveGame()">Leave Room</button>
       </div>
     </div>
 
     <div class="broadcast-banner" id="broadcast-banner">
-      <div class="bc-title">🎉 <span id="bc-name">Someone</span></div>
+      <div class="bc-title">🎆 <span id="bc-name">Someone</span></div>
       <div class="bc-sub">Wait for the next number!</div>
     </div>
 
-    <div class="call-ticker">
+    <div class="call-ticker panel">
       <div>
         <div class="ticker-label">Last Called</div>
         <div class="ticker-val" id="ticker-val">Waiting…</div>
@@ -178,33 +223,33 @@ body{
     </div>
 
     <div class="claim-container" id="claim-buttons">
-      <button class="bingo-btn btn-qs" id="btn-qs" onclick="claimBingo('Quick Strike')" style="display:none;">1 Line: Quick Strike!</button>
-      <button class="bingo-btn btn-dd" id="btn-dd" onclick="claimBingo('Double Dhamaka')" style="display:none;">2 Lines: Double Dhamaka!</button>
-      <button class="bingo-btn btn-fc" id="btn-fc" onclick="claimBingo('Four Corners')" style="display:none;">4 Corners: Corner Capture!</button>
-      <button class="bingo-btn btn-jj" id="btn-jj" onclick="claimBingo('Jackpot Jashn')" style="display:none;">FULL HOUSE: Jackpot Jashn!</button>
+      <button class="bingo-btn btn-qs" id="btn-qs" onclick="claimBingo('Quick Strike')" style="display:none">⚡ 1 Line: Quick Strike!</button>
+      <button class="bingo-btn btn-dd" id="btn-dd" onclick="claimBingo('Double Dhamaka')" style="display:none">🔥 2 Lines: Double Dhamaka!</button>
+      <button class="bingo-btn btn-fc" id="btn-fc" onclick="claimBingo('Four Corners')" style="display:none">🎯 4 Corners: Corner Capture!</button>
+      <button class="bingo-btn btn-jj" id="btn-jj" onclick="claimBingo('Jackpot Jashn')" style="display:none">👑 FULL HOUSE: Jackpot Jashn!</button>
     </div>
 
-    <div class="card-wrap">
+    <div class="card-wrap panel">
       <div class="card-header-row">
         <div class="col-lbl">B</div><div class="col-lbl">I</div>
         <div class="col-lbl">N</div><div class="col-lbl">G</div><div class="col-lbl">O</div>
       </div>
       <div class="card-grid" id="card-grid"></div>
       <div class="card-info">
-        <div class="legend">
-          <div class="legend-item"><div class="legend-strike"></div><span>Manually marked by you</span></div>
-        </div>
+        <div class="legend-item"><div class="legend-dot"></div><span>Lit by you</span></div>
         <div id="match-count">0 marked</div>
       </div>
     </div>
 
+    <div class="footer">Click → Shout 'BINGO!' → Get Verified · Happy Diwali, fam! ✨</div>
   </div>
 </div>
 
 <div class="win-overlay" id="win-overlay">
-  <div class="win-emoji">🎉</div>
+  <div class="win-emoji">🎆</div>
   <div class="win-title" id="win-overlay-title">CLAIM SENT!</div>
-  <div class="win-msg" id="win-msg">Your claim has been sent to the admin!</div>
+  <div class="win-msg" id="win-msg">Your claim has been sent to the hosts!</div>
+  <div class="win-steps">UNMUTE &amp; SHOUT “BINGO!” ON THE CALL</div>
   <button class="win-close" onclick="document.getElementById('win-overlay').classList.remove('show')">Keep Playing</button>
 </div>
 
@@ -225,19 +270,29 @@ const firebaseConfig = {
 
 const LETTERS=['B','I','N','G','O'];
 const RANGES={B:[1,15],I:[16,30],N:[31,45],G:[46,60],O:[61,75]};
+const FREE_IDX=12;
 
 let db,roomId,playerName,playerEmail,playerId;
 let cardNumbers=[];
 let calledByAdmin=new Set();
-let manualMarks=new Set([12]); // FREE square index is always marked
+let calledOrder=[];
+let manualMarks=new Set([FREE_IDX]);
 let demoMode=false;
-let wonPrizes = {}; 
+let wonPrizes={};
+let claimedTypes=new Set();
+let listening=false;
+let recordLive=false; // our player record exists on the server (false briefly after a host reset)
 
-function shuffle(arr){return[...arr].sort(()=>Math.random()-.5);}
+// ---------- helpers ----------
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
 
 function generateCard(){
   const cols=[];
-  for(const[l,[min,max]]of Object.entries(RANGES)){
+  for(const[,[min,max]]of Object.entries(RANGES)){
     const pool=[];for(let i=min;i<=max;i++)pool.push(i);
     cols.push(shuffle(pool).slice(0,5));
   }
@@ -246,15 +301,46 @@ function generateCard(){
   return flat;
 }
 
-function emailToKey(email){return email.toLowerCase().replace(/[.#$[\]]/g,'_');}
+function emailToKey(email){return email.toLowerCase().replace(/[.#$[\]\/]/g,'_');}
 
+// Firebase returns arrays with gaps (or push-keyed lists) as objects; normalise both.
+function toList(val){
+  if(!val)return[];
+  const list=Array.isArray(val)?val:Object.values(val);
+  return list.filter(v=>v!==null&&v!==undefined).map(String);
+}
+
+function marksKey(){return `myhq_bingo_marks_${roomId}_${playerId}`;}
+function claimsKey(){return `myhq_bingo_claims_${roomId}_${playerId}`;}
+
+function loadLocal(key,fallback){
+  try{const v=localStorage.getItem(key);return v?JSON.parse(v):fallback;}catch(e){return fallback;}
+}
+function saveLocal(key,val){try{localStorage.setItem(key,JSON.stringify(val));}catch(e){}}
+function removeLocal(key){try{localStorage.removeItem(key);}catch(e){}}
+
+function setConn(text,state){
+  document.getElementById('conn-text').textContent=text;
+  const el=document.getElementById('conn-status');
+  el.classList.remove('live','off');
+  if(state)el.classList.add(state);
+}
+
+// Marks are saved locally AND on the server so a player can rejoin from any device.
+function persistMarks(){
+  saveLocal(marksKey(),[...manualMarks]);
+  if(!demoMode&&db&&recordLive){
+    set(ref(db,`rooms/${roomId}/players/${playerId}/marks`),[...manualMarks]).catch(()=>{});
+  }
+}
+
+// ---------- join ----------
 window.joinGame=async function(){
   playerName=document.getElementById('p-name').value.trim();
   playerEmail=document.getElementById('p-email').value.trim().toLowerCase();
   roomId=document.getElementById('p-room').value.trim().toUpperCase();
 
-  const errEl=document.getElementById('join-error');
-  errEl.style.display='none';
+  document.getElementById('join-error').style.display='none';
 
   if(!playerName){showErr('Please enter your name.');return;}
   if(!playerEmail||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(playerEmail)){showErr('Please enter a valid company email address.');return;}
@@ -262,252 +348,348 @@ window.joinGame=async function(){
 
   const btn=document.getElementById('join-btn');
   btn.disabled=true;btn.textContent='Joining…';
+  playerId=emailToKey(playerEmail);
 
   if(demoMode){
-    proceedToGame();return;
+    cardNumbers=generateCard();
+    enterGame(null);
+    return;
   }
 
   try{
-    const emailKey=emailToKey(playerEmail);
-    const existingSnap=await get(ref(db,`rooms/${roomId}/players/${emailKey}`));
+    const existingSnap=await get(ref(db,`rooms/${roomId}/players/${playerId}`));
+    let serverMarks=null;
 
-    if(existingSnap.exists()){
+    if(existingSnap.exists()&&existingSnap.val().card){
       const existing=existingSnap.val();
-      cardNumbers=existing.card;
-      playerName=existing.name;
-      playerId=emailKey;
-      
-      localStorage.setItem('myhq_bingo_session', JSON.stringify({name: playerName, email: playerEmail, room: roomId}));
-      
-      document.getElementById('show-name').textContent=playerName;
-      document.getElementById('show-email').textContent=playerEmail;
-      document.getElementById('show-room').textContent=roomId;
-      document.getElementById('join-screen').style.display='none';
-      document.getElementById('game-screen').style.display='block';
-      document.getElementById('conn-status').textContent='Rejoined';
-      
-      const storageKey = `myhq_bingo_marks_${roomId}_${playerId}`;
-      const savedMarks = localStorage.getItem(storageKey);
-      if(savedMarks){
-         manualMarks = new Set(JSON.parse(savedMarks));
-      }
-      
-      renderCard();
-      startListening();
-      return;
+      cardNumbers=toList(existing.card).map(Number);
+      playerName=existing.name||playerName;
+      serverMarks=existing.marks?toList(existing.marks).map(Number):null;
+    }else{
+      // Fresh card: drop any marks/claims this browser kept from an earlier round in this room.
+      removeLocal(marksKey());
+      removeLocal(claimsKey());
+      cardNumbers=generateCard();
+      await set(ref(db,`rooms/${roomId}/players/${playerId}`),{
+        name:playerName,
+        email:playerEmail,
+        card:cardNumbers,
+        joinedAt:serverTimestamp()
+      });
     }
 
-    cardNumbers=generateCard();
-    playerId=emailKey;
-    await set(ref(db,`rooms/${roomId}/players/${emailKey}`),{
-      name:playerName,
-      email:playerEmail,
-      card:cardNumbers,
-      joinedAt:serverTimestamp()
-    });
-    
-    localStorage.setItem('myhq_bingo_session', JSON.stringify({name: playerName, email: playerEmail, room: roomId}));
-
-    proceedToGame();
-
+    recordLive=true;
+    saveLocal('myhq_bingo_session',{name:playerName,email:playerEmail,room:roomId});
+    enterGame(serverMarks);
   }catch(e){
-    showErr('Could not connect to game server. Running in demo mode.');
-    demoMode=true;
-    cardNumbers=generateCard();
-    proceedToGame();
+    // Never silently drop into demo mode: the hosts wouldn't see this card and claims would be lost.
+    console.error(e);
+    setConn('Offline','off');
+    showErr('Could not reach the game server. Check your internet connection and try again.');
   }
 };
 
-function proceedToGame(){
+function enterGame(serverMarks){
   document.getElementById('show-name').textContent=playerName;
   document.getElementById('show-email').textContent=playerEmail;
   document.getElementById('show-room').textContent=roomId;
   document.getElementById('join-screen').style.display='none';
   document.getElementById('game-screen').style.display='block';
-  document.getElementById('conn-status').textContent=demoMode?'Demo':'Live';
-  
-  const storageKey = `myhq_bingo_marks_${roomId}_${playerId}`;
-  const savedMarks = localStorage.getItem(storageKey);
-  if(savedMarks){
-     manualMarks = new Set(JSON.parse(savedMarks));
-  } else {
-     manualMarks = new Set([12]);
-  }
-  
+  document.getElementById('demo-badge').style.display=demoMode?'block':'none';
+
+  // Merge marks from this browser and from the server (another device).
+  const local=loadLocal(marksKey(),[]);
+  manualMarks=new Set([FREE_IDX,...local,...(serverMarks||[])]);
+  claimedTypes=new Set(loadLocal(claimsKey(),[]));
+
   renderCard();
-  if(!demoMode)startListening();
+  if(demoMode){
+    setConn('Demo',null);
+    startDemoCaller();
+  }else{
+    setConn('Live','live');
+    startListening();
+    persistMarks();
+  }
+  checkBingo();
 }
 
 function startListening(){
+  if(listening)return;
+  listening=true;
+
   onValue(ref(db,`rooms/${roomId}/calledNumbers`),snap=>{
-    calledByAdmin=new Set(snap.exists()?snap.val():[]);
-    checkBingo(); 
+    calledOrder=toList(snap.val());
+    calledByAdmin=new Set(calledOrder);
+    checkBingo();
     updateTicker();
   });
-  
+
   onValue(ref(db,`rooms/${roomId}/wonPrizes`),snap=>{
-    wonPrizes = snap.exists() ? snap.val() : {};
+    wonPrizes=snap.val()||{};
     checkBingo();
   });
 
   onValue(ref(db,`rooms/${roomId}/winner`),snap=>{
+    const banner=document.getElementById('broadcast-banner');
     if(snap.exists()&&snap.val()){
       document.getElementById('bc-name').textContent=snap.val();
-      document.getElementById('broadcast-banner').classList.add('show');
+      banner.classList.add('show');
     }else{
-      document.getElementById('broadcast-banner').classList.remove('show');
+      banner.classList.remove('show');
     }
+  });
+
+  // Host pressed "Reset Game": our player record is wiped, so start this player on a fresh card.
+  onValue(ref(db,`rooms/${roomId}/players/${playerId}/card`),snap=>{
+    if(snap.exists()){recordLive=true;return;}
+    if(!recordLive)return;
+    recordLive=false;
+    removeLocal(marksKey());
+    removeLocal(claimsKey());
+    manualMarks=new Set([FREE_IDX]);
+    claimedTypes=new Set();
+    cardNumbers=generateCard();
+    set(ref(db,`rooms/${roomId}/players/${playerId}`),{
+      name:playerName,
+      email:playerEmail,
+      card:cardNumbers,
+      joinedAt:serverTimestamp()
+    }).then(()=>{recordLive=true;}).catch(e=>console.error(e));
+    renderCard();
+    checkBingo();
+  });
+
+  onValue(ref(db,'.info/connected'),snap=>{
+    if(snap.val()===true)setConn('Live','live');
+    else setConn('Reconnecting…','off');
   });
 }
 
+// Demo: auto-calls a number every 3s so hosts/players can rehearse without touching the live room.
+function startDemoCaller(){
+  const all=[];
+  LETTERS.forEach(l=>{const[a,b]=RANGES[l];for(let n=a;n<=b;n++)all.push(`${l}${n}`);});
+  const order=shuffle(all);
+  let i=0;
+  const t=setInterval(()=>{
+    if(i>=order.length){clearInterval(t);return;}
+    calledOrder.push(order[i++]);
+    calledByAdmin=new Set(calledOrder);
+    updateTicker();
+    checkBingo();
+  },3000);
+}
+
+// ---------- card ----------
 function renderCard(){
   const grid=document.getElementById('card-grid');
   grid.innerHTML='';
 
-  for(let idx=0;idx<25;idx++){
-    const col=Math.floor(idx/5);
+  // cardNumbers is column-major (idx = col*5+row); the CSS grid fills row by row,
+  // so walk rows first or the B/I/N/G/O headers end up over the wrong numbers.
+  for(let pos=0;pos<25;pos++){
+    const idx=(pos%5)*5+Math.floor(pos/5);
     const cell=document.createElement('div');
     cell.className='card-cell';
 
-    if(idx===12){
+    if(idx===FREE_IDX){
       cell.classList.add('free','marked');
-      cell.textContent='FREE';
+      cell.innerHTML='<span class="free-ic">🪔</span><span>FREE</span>';
     }else{
-      const num=cardNumbers[idx];
-      const playerMarked=manualMarks.has(idx);
-
-      cell.textContent=num;
-
-      if(playerMarked){
-        cell.classList.add('marked');
-      }
-
+      cell.textContent=cardNumbers[idx];
+      if(manualMarks.has(idx))cell.classList.add('marked');
       cell.onclick=()=>{
-        if(manualMarks.has(idx)){
-          manualMarks.delete(idx);
-        }else{
-          manualMarks.add(idx);
-        }
-        
-        const storageKey = `myhq_bingo_marks_${roomId}_${playerId}`;
-        localStorage.setItem(storageKey, JSON.stringify([...manualMarks]));
-        
+        if(manualMarks.has(idx))manualMarks.delete(idx);
+        else manualMarks.add(idx);
+        persistMarks();
         renderCard();
         checkBingo();
       };
     }
     grid.appendChild(cell);
   }
-  
-  const userMarks = Math.max(0, manualMarks.size - 1);
-  document.getElementById('match-count').textContent=`${userMarks} marked`;
+
+  document.getElementById('match-count').textContent=`${manualMarks.size-1} marked`;
 }
 
 function updateTicker(){
-  const total=calledByAdmin.size;
-  if(total>0){
-    const arr=[...calledByAdmin];
-    document.getElementById('ticker-val').textContent=arr[arr.length-1];
+  const total=calledOrder.length;
+  const el=document.getElementById('ticker-val');
+  const last=total>0?calledOrder[total-1]:'';
+  const next=total>0?last.replace(/^([BINGO])(\d+)$/,'$1 · $2'):'Waiting…';
+  if(el.textContent!==next){
+    el.textContent=next;
+    if(total>0){el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');}
   }
-  document.getElementById('ticker-right').innerHTML=`Numbers called: ${total}`;
+  document.getElementById('ticker-right').textContent=`Numbers called: ${total}`;
 }
 
+// A square only counts if the player marked it AND the hosts have called it.
 function isValidMark(col,row){
   const idx=col*5+row;
-  if(idx===12)return true; 
-  if(!manualMarks.has(idx)) return false; 
-  const key=`${LETTERS[col]}${cardNumbers[idx]}`;
-  return calledByAdmin.has(key);
+  if(idx===FREE_IDX)return true;
+  if(!manualMarks.has(idx))return false;
+  return calledByAdmin.has(`${LETTERS[col]}${cardNumbers[idx]}`);
 }
 
 function checkBingo(){
-  let completedLines = 0;
-  let validMatchedCells = 0;
-  
-  // Check Four Corners
-  let fourCornersValid = isValidMark(0,0) && isValidMark(0,4) && isValidMark(4,0) && isValidMark(4,4);
+  if(!cardNumbers.length)return;
+  let completedLines=0;
+  let validMatchedCells=0;
 
-  for(let row=0;row<5;row++){ if([0,1,2,3,4].every(col=>isValidMark(col,row))) completedLines++; }
-  for(let col=0;col<5;col++){ if([0,1,2,3,4].every(row=>isValidMark(col,row))) completedLines++; }
-  if([0,1,2,3,4].every(i=>isValidMark(i,i))) completedLines++;
-  if([0,1,2,3,4].every(i=>isValidMark(i,4-i))) completedLines++;
+  const fourCornersValid=isValidMark(0,0)&&isValidMark(0,4)&&isValidMark(4,0)&&isValidMark(4,4);
 
-  for(let col=0;col<5;col++){
-    for(let row=0;row<5;row++){
-      if(isValidMark(col,row)) validMatchedCells++;
+  for(let row=0;row<5;row++){if([0,1,2,3,4].every(col=>isValidMark(col,row)))completedLines++;}
+  for(let col=0;col<5;col++){if([0,1,2,3,4].every(row=>isValidMark(col,row)))completedLines++;}
+  if([0,1,2,3,4].every(i=>isValidMark(i,i)))completedLines++;
+  if([0,1,2,3,4].every(i=>isValidMark(i,4-i)))completedLines++;
+
+  for(let col=0;col<5;col++)for(let row=0;row<5;row++)if(isValidMark(col,row))validMatchedCells++;
+
+  const rules=[
+    ['btn-qs','Quick Strike',completedLines>=1],
+    ['btn-dd','Double Dhamaka',completedLines>=2],
+    ['btn-fc','Four Corners',fourCornersValid],
+    ['btn-jj','Jackpot Jashn',validMatchedCells===25],
+  ];
+
+  let showAny=false;
+  for(const[id,type,earned]of rules){
+    const btn=document.getElementById(id);
+    const show=earned&&!wonPrizes[type];
+    btn.style.display=show?'block':'none';
+    if(show){
+      showAny=true;
+      const sent=claimedTypes.has(type);
+      btn.disabled=sent;
+      if(!btn.dataset.label)btn.dataset.label=btn.textContent;
+      btn.textContent=sent?`✓ ${type} claimed — shout BINGO!`:btn.dataset.label;
+    }
+  }
+  document.getElementById('claim-buttons').style.display=showAny?'flex':'none';
+}
+
+// ---------- claim ----------
+window.claimBingo=async function(claimType){
+  if(claimedTypes.has(claimType))return;
+
+  if(!demoMode&&db){
+    const claimKey=emailToKey(playerEmail);
+    try{
+      await set(ref(db,`rooms/${roomId}/claims/${claimKey}_${Date.now()}`),{
+        name:playerName,
+        email:playerEmail,
+        emailKey:claimKey,
+        type:claimType,
+        ts:Date.now()
+      });
+    }catch(e){
+      console.error(e);
+      document.getElementById('win-overlay-title').textContent='Claim failed';
+      document.getElementById('win-msg').textContent='Your claim did not reach the hosts. Check your connection, then tap the claim button again — and shout BINGO on the call!';
+      document.getElementById('win-overlay').classList.add('show');
+      return;
     }
   }
 
-  const container = document.getElementById('claim-buttons');
-  const btnQS = document.getElementById('btn-qs');
-  const btnDD = document.getElementById('btn-dd');
-  const btnFC = document.getElementById('btn-fc');
-  const btnJJ = document.getElementById('btn-jj');
+  claimedTypes.add(claimType);
+  saveLocal(claimsKey(),[...claimedTypes]);
+  checkBingo();
 
-  let showAny = false;
-
-  if(completedLines >= 1 && !wonPrizes['Quick Strike']) { btnQS.style.display = 'block'; showAny = true; } else { btnQS.style.display = 'none'; }
-  if(completedLines >= 2 && !wonPrizes['Double Dhamaka']) { btnDD.style.display = 'block'; showAny = true; } else { btnDD.style.display = 'none'; }
-  if(fourCornersValid && !wonPrizes['Four Corners']) { btnFC.style.display = 'block'; showAny = true; } else { btnFC.style.display = 'none'; }
-  if(validMatchedCells === 25 && !wonPrizes['Jackpot Jashn']) { btnJJ.style.display = 'block'; showAny = true; } else { btnJJ.style.display = 'none'; }
-
-  container.style.display = showAny ? 'flex' : 'none';
-}
-
-window.claimBingo=async function(claimType){
-  document.getElementById('win-overlay-title').textContent = claimType;
-  document.getElementById('win-msg').textContent=`${playerName}, you claimed ${claimType}! The admin is verifying your card now.`;
+  document.getElementById('win-overlay-title').textContent=claimType;
+  document.getElementById('win-msg').textContent=demoMode
+    ?`${playerName}, that's a ${claimType}! (Demo mode — nothing was sent.)`
+    :`${playerName}, you claimed ${claimType}! The hosts are verifying your card now.`;
   document.getElementById('win-overlay').classList.add('show');
-  
-  if(!demoMode&&db){
-    const claimKey=emailToKey(playerEmail);
-    const uniqueClaimKey = claimKey + "_" + Date.now();
-    
-    await set(ref(db,`rooms/${roomId}/claims/${uniqueClaimKey}`),{
-      name:playerName,
-      email:playerEmail,
-      emailKey: claimKey,
-      type: claimType,
-      ts:Date.now()
-    });
-  }
+  fireworks();
 };
+
+function fireworks(){
+  const colors=['#FFD166','#FF9F1C','#E0218A','#FF6B35','#fff'];
+  const overlay=document.getElementById('win-overlay');
+  for(let b=0;b<3;b++){
+    const cx=20+Math.random()*60, cy=15+Math.random()*35;
+    for(let i=0;i<22;i++){
+      const p=document.createElement('div');
+      p.className='firework';
+      const a=(Math.PI*2*i)/22, r=60+Math.random()*50;
+      p.style.left=cx+'%';p.style.top=cy+'%';
+      p.style.background=colors[i%colors.length];
+      p.style.setProperty('--dx',`${Math.cos(a)*r}px`);
+      p.style.setProperty('--dy',`${Math.sin(a)*r}px`);
+      p.style.animationDelay=`${b*0.35}s`;
+      overlay.appendChild(p);
+      setTimeout(()=>p.remove(),2200);
+    }
+  }
+}
 
 function showErr(msg){
   const el=document.getElementById('join-error');
   el.textContent=msg;el.style.display='block';
   const btn=document.getElementById('join-btn');
-  btn.disabled=false;btn.textContent='Get My Card →';
+  btn.disabled=false;btn.textContent='Get My Card 🪔';
 }
 
-window.leaveGame = function() {
-  localStorage.removeItem('myhq_bingo_session');
-  location.reload();
+window.leaveGame=function(){
+  removeLocal('myhq_bingo_session');
+  location.href=location.pathname+(demoMode?'?demo=1':'');
 };
 
-async function init(){
+function makeSky(){
+  const sky=document.getElementById('sky');
+  for(let i=0;i<28;i++){
+    const s=document.createElement('div');
+    s.className='spark';
+    s.style.left=Math.random()*100+'%';
+    s.style.top=Math.random()*100+'%';
+    s.style.animationDelay=(Math.random()*4)+'s';
+    s.style.animationDuration=(3+Math.random()*3)+'s';
+    if(i%3===0)s.style.background='#FF9F1C';
+    if(i%5===0)s.style.background='#E0218A';
+    sky.appendChild(s);
+  }
+}
+
+// ---------- init ----------
+function init(){
+  makeSky();
   const params=new URLSearchParams(location.search);
-  const roomParam=params.get('room');
-  
+  const roomParam=(params.get('room')||'').toUpperCase();
+  demoMode=params.get('demo')==='1';
+
+  if(demoMode){
+    setConn('Demo',null);
+    if(roomParam)document.getElementById('p-room').value=roomParam;
+    else document.getElementById('p-room').value='DEMO';
+    return;
+  }
+
   try{
     const app=initializeApp(firebaseConfig);
     db=getDatabase(app);
-    document.getElementById('conn-status').textContent='Connected';
-    
-    const savedSession = localStorage.getItem('myhq_bingo_session');
-    if(savedSession){
-       const session = JSON.parse(savedSession);
-       document.getElementById('p-name').value = session.name;
-       document.getElementById('p-email').value = session.email;
-       document.getElementById('p-room').value = roomParam || session.room; 
-       
-       joinGame();
-    } else if(roomParam) {
-       document.getElementById('p-room').value=roomParam;
-    }
+    setConn('Connected',null);
   }catch(e){
-    demoMode=true;
-    document.getElementById('conn-status').textContent='Demo';
+    console.error(e);
+    setConn('Offline','off');
+    showErr('Could not load the game. Please refresh the page.');
+    return;
+  }
+
+  const session=loadLocal('myhq_bingo_session',null);
+  if(session&&(!roomParam||roomParam===session.room)){
+    document.getElementById('p-name').value=session.name;
+    document.getElementById('p-email').value=session.email;
+    document.getElementById('p-room').value=session.room;
+    joinGame();
+  }else{
+    if(session){
+      // New room link: prefill details but let them confirm before creating a card in the new room.
+      document.getElementById('p-name').value=session.name;
+      document.getElementById('p-email').value=session.email;
+    }
+    if(roomParam)document.getElementById('p-room').value=roomParam;
   }
 }
 
