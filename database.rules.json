@@ -1,0 +1,171 @@
+{
+  "rules": {
+    ".read": "false",
+    ".write": "false",
+    "hosts": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid"
+      }
+    },
+    "rooms": {
+      "$room": {
+        ".read": "auth != null && root.child('hosts').child(auth.uid).val() === true",
+        ".write": "auth != null && root.child('hosts').child(auth.uid).val() === true",
+        "status": {
+          ".read": "auth != null"
+        },
+        "calledNumbers": {
+          ".read": "auth != null"
+        },
+        "lastCall": {
+          ".read": "auth != null"
+        },
+        "winner": {
+          ".read": "auth != null"
+        },
+        "wonPrizes": {
+          ".read": "auth != null"
+        },
+        "players": {
+          "$player": {
+            ".read": "auth != null",
+            ".validate": "newData.hasChildren(['uid','name','email','card','joinedAt'])",
+            "uid": {
+              ".write": "auth != null && !data.exists() && newData.val() === auth.uid && root.child('rooms').child($room).child('status').exists()"
+            },
+            "name": {
+              ".write": "auth != null && newData.parent().child('uid').val() === auth.uid",
+              ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 60"
+            },
+            "email": {
+              ".write": "auth != null && newData.parent().child('uid').val() === auth.uid && !data.exists()",
+              ".validate": "newData.isString() && newData.val().length <= 120 && newData.val().matches(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/) && newData.val().toLowerCase().replace('.', '_').replace('#', '_').replace('$', '_').replace('[', '_').replace(']', '_').replace('/', '_') === $player"
+            },
+            "card": {
+              ".write": "auth != null && newData.parent().child('uid').val() === auth.uid && !data.exists()",
+              ".validate": "newData.hasChildren(['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24'])",
+              "$other": {
+                ".validate": "false"
+              },
+              "0": {
+                ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 15"
+              },
+              "1": {
+                ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 15 && newData.val() !== newData.parent().child('0').val()"
+              },
+              "2": {
+                ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 15 && newData.val() !== newData.parent().child('0').val() && newData.val() !== newData.parent().child('1').val()"
+              },
+              "3": {
+                ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 15 && newData.val() !== newData.parent().child('0').val() && newData.val() !== newData.parent().child('1').val() && newData.val() !== newData.parent().child('2').val()"
+              },
+              "4": {
+                ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 15 && newData.val() !== newData.parent().child('0').val() && newData.val() !== newData.parent().child('1').val() && newData.val() !== newData.parent().child('2').val() && newData.val() !== newData.parent().child('3').val()"
+              },
+              "5": {
+                ".validate": "newData.isNumber() && newData.val() >= 16 && newData.val() <= 30"
+              },
+              "6": {
+                ".validate": "newData.isNumber() && newData.val() >= 16 && newData.val() <= 30 && newData.val() !== newData.parent().child('5').val()"
+              },
+              "7": {
+                ".validate": "newData.isNumber() && newData.val() >= 16 && newData.val() <= 30 && newData.val() !== newData.parent().child('5').val() && newData.val() !== newData.parent().child('6').val()"
+              },
+              "8": {
+                ".validate": "newData.isNumber() && newData.val() >= 16 && newData.val() <= 30 && newData.val() !== newData.parent().child('5').val() && newData.val() !== newData.parent().child('6').val() && newData.val() !== newData.parent().child('7').val()"
+              },
+              "9": {
+                ".validate": "newData.isNumber() && newData.val() >= 16 && newData.val() <= 30 && newData.val() !== newData.parent().child('5').val() && newData.val() !== newData.parent().child('6').val() && newData.val() !== newData.parent().child('7').val() && newData.val() !== newData.parent().child('8').val()"
+              },
+              "10": {
+                ".validate": "newData.isNumber() && newData.val() >= 31 && newData.val() <= 45"
+              },
+              "11": {
+                ".validate": "newData.isNumber() && newData.val() >= 31 && newData.val() <= 45 && newData.val() !== newData.parent().child('10').val()"
+              },
+              "12": {
+                ".validate": "newData.isNumber() && newData.val() >= 31 && newData.val() <= 45 && newData.val() !== newData.parent().child('10').val() && newData.val() !== newData.parent().child('11').val()"
+              },
+              "13": {
+                ".validate": "newData.isNumber() && newData.val() >= 31 && newData.val() <= 45 && newData.val() !== newData.parent().child('10').val() && newData.val() !== newData.parent().child('11').val() && newData.val() !== newData.parent().child('12').val()"
+              },
+              "14": {
+                ".validate": "newData.isNumber() && newData.val() >= 31 && newData.val() <= 45 && newData.val() !== newData.parent().child('10').val() && newData.val() !== newData.parent().child('11').val() && newData.val() !== newData.parent().child('12').val() && newData.val() !== newData.parent().child('13').val()"
+              },
+              "15": {
+                ".validate": "newData.isNumber() && newData.val() >= 46 && newData.val() <= 60"
+              },
+              "16": {
+                ".validate": "newData.isNumber() && newData.val() >= 46 && newData.val() <= 60 && newData.val() !== newData.parent().child('15').val()"
+              },
+              "17": {
+                ".validate": "newData.isNumber() && newData.val() >= 46 && newData.val() <= 60 && newData.val() !== newData.parent().child('15').val() && newData.val() !== newData.parent().child('16').val()"
+              },
+              "18": {
+                ".validate": "newData.isNumber() && newData.val() >= 46 && newData.val() <= 60 && newData.val() !== newData.parent().child('15').val() && newData.val() !== newData.parent().child('16').val() && newData.val() !== newData.parent().child('17').val()"
+              },
+              "19": {
+                ".validate": "newData.isNumber() && newData.val() >= 46 && newData.val() <= 60 && newData.val() !== newData.parent().child('15').val() && newData.val() !== newData.parent().child('16').val() && newData.val() !== newData.parent().child('17').val() && newData.val() !== newData.parent().child('18').val()"
+              },
+              "20": {
+                ".validate": "newData.isNumber() && newData.val() >= 61 && newData.val() <= 75"
+              },
+              "21": {
+                ".validate": "newData.isNumber() && newData.val() >= 61 && newData.val() <= 75 && newData.val() !== newData.parent().child('20').val()"
+              },
+              "22": {
+                ".validate": "newData.isNumber() && newData.val() >= 61 && newData.val() <= 75 && newData.val() !== newData.parent().child('20').val() && newData.val() !== newData.parent().child('21').val()"
+              },
+              "23": {
+                ".validate": "newData.isNumber() && newData.val() >= 61 && newData.val() <= 75 && newData.val() !== newData.parent().child('20').val() && newData.val() !== newData.parent().child('21').val() && newData.val() !== newData.parent().child('22').val()"
+              },
+              "24": {
+                ".validate": "newData.isNumber() && newData.val() >= 61 && newData.val() <= 75 && newData.val() !== newData.parent().child('20').val() && newData.val() !== newData.parent().child('21').val() && newData.val() !== newData.parent().child('22').val() && newData.val() !== newData.parent().child('23').val()"
+              }
+            },
+            "joinedAt": {
+              ".write": "auth != null && newData.parent().child('uid').val() === auth.uid && !data.exists()",
+              ".validate": "newData.val() === now"
+            },
+            "marks": {
+              ".write": "auth != null && newData.parent().child('uid').val() === auth.uid",
+              "$m": {
+                ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 24"
+              }
+            },
+            "$other": {
+              ".validate": "false"
+            }
+          }
+        },
+        "claims": {
+          "$claim": {
+            ".write": "auth != null && !data.exists() && newData.child('uid').val() === auth.uid",
+            ".validate": "newData.hasChildren(['name','email','emailKey','type','uid','ts']) && root.child('rooms').child($room).child('players').child(newData.child('emailKey').val()).exists() && !root.child('rooms').child($room).child('wonPrizes').child(newData.child('type').val()).exists()",
+            "name": {
+              ".validate": "newData.isString() && newData.val().length <= 60"
+            },
+            "email": {
+              ".validate": "newData.isString() && newData.val().length <= 120"
+            },
+            "emailKey": {
+              ".validate": "newData.isString() && newData.val().length <= 150"
+            },
+            "type": {
+              ".validate": "newData.isString() && newData.val().matches(/^(Quick Strike|Double Dhamaka|Four Corners|Jackpot Jashn)$/)"
+            },
+            "uid": {
+              ".validate": "newData.isString()"
+            },
+            "ts": {
+              ".validate": "newData.val() === now"
+            },
+            "$other": {
+              ".validate": "false"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -136,19 +136,35 @@ body{
 .modal-actions{display:flex;gap:10px}
 .modal-actions button{flex:1;margin:0}
 
+.login{max-width:380px;margin:12vh auto 0;padding:28px;text-align:center}
+.login h2{font-family:var(--display);font-size:30px;color:var(--gold);margin:8px 0 4px}
+.login p{font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.5}
+.login .announce-input{font-family:var(--sans);font-size:15px;padding:13px 14px;margin-bottom:10px}
+.login-err{display:none;margin-top:12px;font-size:13px;color:#FFD7D7;background:rgba(220,38,38,.18);border:1px solid rgba(248,113,113,.4);border-radius:8px;padding:10px}
+.signout-btn{background:none;border:none;color:var(--marigold);font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:1px;margin-left:12px}
 @media(max-width:800px){.main-grid{grid-template-columns:1fr}.stats-row{grid-template-columns:repeat(2,1fr)}.bingo-board{grid-template-columns:repeat(5,1fr)}.board-header{grid-column:span 1}}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 <div class="toran" aria-hidden="true"></div>
-<div class="wrap">
+<form class="panel login" id="login" style="display:none" onsubmit="event.preventDefault();hostSignIn()">
+  <img src="logo.jpg" alt="myHQ Logo" class="logo-img">
+  <h2>Host Sign-in</h2>
+  <p>Bingo Bonanza · Diwali Edition<br>Only hosts can open the dashboard.</p>
+  <input class="announce-input" id="login-email" type="email" placeholder="Host email" autocomplete="username" required>
+  <input class="announce-input" id="login-pass" type="password" placeholder="Password" autocomplete="current-password" required>
+  <button class="call-btn" id="login-btn" type="submit" style="margin-top:4px">Sign in 🪔</button>
+  <div class="login-err" id="login-err"></div>
+</form>
+
+<div class="wrap" id="dash" style="display:none">
   <div class="header">
     <div class="logo">
       <img src="logo.jpg" alt="myHQ Logo" class="logo-img">
       <div><div class="logo-title">Bingo Bonanza 🪔</div><div class="logo-sub">Diwali Edition · Host Dashboard</div></div>
     </div>
-    <div class="live-pill"><div class="dot"></div><span id="status-text">Initialising…</span></div>
+    <div style="display:flex;align-items:center"><div class="live-pill"><div class="dot"></div><span id="status-text">Initialising…</span></div><button class="signout-btn" id="signout-btn" style="display:none" onclick="hostSignOut()">Sign out</button></div>
   </div>
 
   <div class="room-bar">
@@ -238,6 +254,7 @@ body{
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import{getDatabase,ref,set,get,update,onValue,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import{getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB59Bek7qL6ip2PMjW1JwhbbnGQg2cXP1Y",
@@ -330,26 +347,69 @@ const BINGO_HINTS = {
 
 const LETTERS=['B','I','N','G','O'];
 const RANGES={B:[1,15],I:[16,30],N:[31,45],G:[46,60],O:[61,75]};
-let db,roomId,calledNums=[],callQueue=[],wonPrizes={},claimsById={},calling=false;
+let db,auth,started=false,callTimes=[],roomId,calledNums=[],callQueue=[],wonPrizes={},claimsById={},calling=false;
 const allNumbers=[];
 for(const[l,[min,max]]of Object.entries(RANGES))for(let i=min;i<=max;i++)allNumbers.push({letter:l,num:i});
 
 async function init(){
   if(new URLSearchParams(location.search).get('demo')==='1'){
     // Rehearsal mode: nothing touches the live database.
+    document.getElementById('dash').style.display='block';
     document.getElementById('fb-status').textContent='Demo mode — practice only, nothing is saved';
     document.getElementById('room-code-display').textContent='MHQ-DEMO';
     initDemo();
     return;
   }
+  const app=initializeApp(firebaseConfig);
+  db=getDatabase(app);
+  auth=getAuth(app);
+  showLogin(); // visible straight away; replaced by the dashboard once a host session is confirmed
+
+  onAuthStateChanged(auth,async user=>{
+    if(!user){showLogin();return;}
+    // A signed-in account is only a host if the database lists its uid under /hosts (see FIREBASE_RULES.md).
+    let isHost=false;
+    try{isHost=(await get(ref(db,`hosts/${user.uid}`))).val()===true;}catch(e){console.error(e);}
+    if(!isHost){
+      await signOut(auth);
+      showLogin(`This account isn't set up as a host (uid: ${user.uid}). Add it under /hosts in Firebase.`);
+      return;
+    }
+    document.getElementById('login').style.display='none';
+    document.getElementById('dash').style.display='block';
+    document.getElementById('signout-btn').style.display='inline';
+    if(!started){started=true;startDashboard();}
+  });
+}
+
+function showLogin(err){
+  document.getElementById('dash').style.display='none';
+  document.getElementById('login').style.display='block';
+  const el=document.getElementById('login-err');
+  el.textContent=err||'';el.style.display=err?'block':'none';
+  const btn=document.getElementById('login-btn');btn.disabled=false;btn.textContent='Sign in 🪔';
+}
+
+window.hostSignIn=async function(){
+  const btn=document.getElementById('login-btn');btn.disabled=true;btn.textContent='Signing in…';
   try{
-    const app=initializeApp(firebaseConfig);
-    db=getDatabase(app);
-    document.getElementById('fb-status').textContent='✓ Firebase connected';
-    
+    await signInWithEmailAndPassword(auth,document.getElementById('login-email').value.trim(),document.getElementById('login-pass').value);
+  }catch(e){
+    console.error(e);
+    showLogin('Wrong email or password.');
+  }
+};
+
+window.hostSignOut=async function(){
+  await signOut(auth);
+  location.reload();
+};
+
+async function startDashboard(){
+  try{
     const params=new URLSearchParams(location.search);
-    let roomFromUrl = params.get('room');
-    let savedRoom = localStorage.getItem('myhq_bingo_room');
+    const roomFromUrl=(params.get('room')||'').trim().toUpperCase();
+    const savedRoom=localStorage.getItem('myhq_bingo_room');
 
     if(roomFromUrl){
        roomId = roomFromUrl;
@@ -362,15 +422,16 @@ async function init(){
        localStorage.setItem('myhq_bingo_room', roomId);
        history.replaceState(null,'',`?room=${roomId}`);
     }
-    
+
     document.getElementById('room-code-display').textContent=roomId;
     await loadOrCreate();
     listenRoom();listenPlayers();listenClaims();
+    document.getElementById('fb-status').textContent='✓ Connected to the live game';
   }catch(e){
-    document.getElementById('fb-status').textContent='⚠ Firebase not configured — running in demo mode';
-    document.getElementById('status-text').textContent='Demo Mode';
-    document.getElementById('room-code-display').textContent='MHQ-DEMO';
-    initDemo();
+    // Don't drop into demo mode here: the host would think the game is live when it isn't.
+    console.error(e);
+    document.getElementById('fb-status').textContent='⚠ Could not load the room: '+(e.code||e.message)+' — refresh, or check the Firebase rules.';
+    document.getElementById('status-text').textContent='Not connected';
   }
 }
 
@@ -406,6 +467,9 @@ function listenRoom(){
   onValue(ref(db,`rooms/${roomId}/callQueue`),snap=>{
     callQueue=toList(snap.val()).map(parseCall);
     updateUI();
+  });
+  onValue(ref(db,`rooms/${roomId}/callTimes`),snap=>{
+    callTimes=toList(snap.val()).map(Number);
   });
   onValue(ref(db,`rooms/${roomId}/winner`),snap=>{
     if(snap.val())showWinnerBanner(snap.val());
@@ -527,9 +591,14 @@ window.verifyClaim = async function(emailKey, claimType) {
        cardHtml+=`<div class="${isVerified(c,r)?'hit':''}">${esc(card[idx])}</div>`;
      }
 
+     // Cards are made in the player's browser, so a card created mid-game could be hand-picked from numbers
+     // already called. Flag it so the host can look twice before confirming.
+     const calledBeforeJoin=player.joinedAt?callTimes.filter(t=>t<player.joinedAt).length:0;
+     const lateNote=calledBeforeJoin>0?` ⚠ Joined after ${calledBeforeJoin} number${calledBeforeJoin>1?'s were':' was'} called — check the card looks like a normal random card before confirming.`:'';
+
      if (isValid) {
        showModal('✅ Legitimate claim',true,
-         `${player.name} achieved ${claimType}. Confirm them as the winner and lock this prize?`,cardHtml,[
+         `${player.name} achieved ${claimType}. Confirm them as the winner and lock this prize?${lateNote}`,cardHtml,[
          ['Confirm winner','call-btn',async()=>{
            await update(ref(db,`rooms/${roomId}`),{
              [`wonPrizes/${claimType}`]:player.name,
@@ -560,6 +629,7 @@ window.callNumber=async function(){
       calledNumbers:nc.map(c=>`${c.letter}${c.num}`),
       callQueue:nq.map(c=>`${c.letter}${c.num}`),
       lastCall:`${pick.letter}${pick.num}`,
+      [`callTimes/${nc.length-1}`]:serverTimestamp(),
       status:'playing'
     });
   }catch(e){

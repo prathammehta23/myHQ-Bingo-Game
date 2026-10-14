@@ -180,11 +180,11 @@ body{
     <div class="join-form panel">
       <div class="field">
         <label class="field-label" for="p-name">Your Name</label>
-        <input class="field-input" id="p-name" placeholder="e.g. Priya Sharma" autocomplete="name">
+        <input class="field-input" id="p-name" placeholder="e.g. Priya Sharma" autocomplete="name" maxlength="60">
       </div>
       <div class="field">
         <label class="field-label" for="p-email">Company Email</label>
-        <input class="field-input" id="p-email" type="email" placeholder="priya.sharma@myhq.in" autocomplete="email">
+        <input class="field-input" id="p-email" type="email" placeholder="priya.sharma@myhq.in" autocomplete="email" maxlength="120">
       </div>
       <div class="field">
         <label class="field-label" for="p-room">Room Code</label>
@@ -255,7 +255,8 @@ body{
 
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import{getDatabase,ref,set,get,onValue,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import{getDatabase,ref,set,get,update,onValue,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import{getAuth,signInAnonymously}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB59Bek7qL6ip2PMjW1JwhbbnGQg2cXP1Y",
@@ -272,7 +273,7 @@ const LETTERS=['B','I','N','G','O'];
 const RANGES={B:[1,15],I:[16,30],N:[31,45],G:[46,60],O:[61,75]};
 const FREE_IDX=12;
 
-let db,roomId,playerName,playerEmail,playerId;
+let db,auth,roomId,playerName,playerEmail,playerId;
 let cardNumbers=[];
 let calledByAdmin=new Set();
 let calledOrder=[];
@@ -334,6 +335,20 @@ function persistMarks(){
   }
 }
 
+// The security rules tie each player record to the anonymous sign-in that created it (uid).
+function myUid(){return auth&&auth.currentUser?auth.currentUser.uid:null;}
+
+function createRecord(){
+  const base=`rooms/${roomId}/players/${playerId}`;
+  return update(ref(db),{
+    [`${base}/uid`]:myUid(),
+    [`${base}/name`]:playerName,
+    [`${base}/email`]:playerEmail,
+    [`${base}/card`]:cardNumbers,
+    [`${base}/joinedAt`]:serverTimestamp()
+  });
+}
+
 // ---------- join ----------
 window.joinGame=async function(){
   playerName=document.getElementById('p-name').value.trim();
@@ -357,6 +372,11 @@ window.joinGame=async function(){
   }
 
   try{
+    const roomSnap=await get(ref(db,`rooms/${roomId}/status`));
+    if(!roomSnap.exists()){
+      showErr('Room not found. Check the room code the hosts shared on the call.');
+      return;
+    }
     const existingSnap=await get(ref(db,`rooms/${roomId}/players/${playerId}`));
     let serverMarks=null;
 
@@ -370,12 +390,7 @@ window.joinGame=async function(){
       removeLocal(marksKey());
       removeLocal(claimsKey());
       cardNumbers=generateCard();
-      await set(ref(db,`rooms/${roomId}/players/${playerId}`),{
-        name:playerName,
-        email:playerEmail,
-        card:cardNumbers,
-        joinedAt:serverTimestamp()
-      });
+      await createRecord();
     }
 
     recordLive=true;
@@ -450,12 +465,12 @@ function startListening(){
     manualMarks=new Set([FREE_IDX]);
     claimedTypes=new Set();
     cardNumbers=generateCard();
-    set(ref(db,`rooms/${roomId}/players/${playerId}`),{
-      name:playerName,
-      email:playerEmail,
-      card:cardNumbers,
-      joinedAt:serverTimestamp()
-    }).then(()=>{recordLive=true;}).catch(e=>console.error(e));
+    createRecord().then(()=>{recordLive=true;}).catch(async e=>{
+      // Another device with this email re-registered first: adopt the card it created.
+      console.error(e);
+      const snap=await get(ref(db,`rooms/${roomId}/players/${playerId}/card`)).catch(()=>null);
+      if(snap&&snap.exists()){cardNumbers=toList(snap.val()).map(Number);renderCard();checkBingo();}
+    });
     renderCard();
     checkBingo();
   });
@@ -582,7 +597,8 @@ window.claimBingo=async function(claimType){
         email:playerEmail,
         emailKey:claimKey,
         type:claimType,
-        ts:Date.now()
+        uid:myUid(),
+        ts:serverTimestamp()
       });
     }catch(e){
       console.error(e);
@@ -653,7 +669,7 @@ function makeSky(){
 }
 
 // ---------- init ----------
-function init(){
+async function init(){
   makeSky();
   const params=new URLSearchParams(location.search);
   const roomParam=(params.get('room')||'').toUpperCase();
@@ -669,6 +685,17 @@ function init(){
   try{
     const app=initializeApp(firebaseConfig);
     db=getDatabase(app);
+    auth=getAuth(app);
+    setConn('Connecting…',null);
+    try{
+      await signInAnonymously(auth);
+    }catch(e){
+      // Without sign-in the security rules will refuse every write, so say so up front.
+      console.error(e);
+      setConn('Offline','off');
+      showErr('Could not connect to the game. Refresh the page; if it keeps failing, tell the hosts.');
+      return;
+    }
     setConn('Connected',null);
   }catch(e){
     console.error(e);
